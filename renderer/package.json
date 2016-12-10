@@ -1,0 +1,13 @@
+{
+    "name": "easypage-renderer",
+    "version": "0.1.0",
+    "description": "page renderer for easypage format",
+    "author": {
+        "name": "Markus Peröbner",
+        "email": "markus.peroebner@gmail.com"
+    },
+    "main": "lib/main",
+    "dependencies": {
+        "q": "1.4.1"
+    }
+}
