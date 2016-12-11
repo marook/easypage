@@ -6,8 +6,13 @@
         "name": "Markus Peröbner",
         "email": "markus.peroebner@gmail.com"
     },
+    "engines":{
+        "node": ">=4.4.5"
+    },
     "main": "lib/main",
     "dependencies": {
-        "q": "1.4.1"
+        "escape-html": "1.0.3",
+        "q": "1.4.1",
+        "q-io": "1.13.2"
     }
 }
