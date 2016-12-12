@@ -11,5 +11,8 @@
     "articles": [
         "article2.json",
         "article1.json"
+    ],
+    "footer": [
+        "imprint.json"
     ]
 }

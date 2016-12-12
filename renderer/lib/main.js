@@ -29,6 +29,7 @@ Renderer.prototype.renderSite = function renderSite(siteDefinition){
     return q.all([]
                  .concat(siteDefinition.pages.map(p => renderer.loadAndRenderPage(siteDefinition, p)))
                  .concat(siteDefinition.articles.map(a => renderer.loadAndRenderPage(siteDefinition, a)))
+                 .concat(siteDefinition.footer.map(f => renderer.loadAndRenderPage(siteDefinition, f)))
                 );
 };
 
@@ -81,7 +82,7 @@ Renderer.prototype.renderPage = function renderPage(siteDefiniton, pageDefinitio
             promises = promises.concat(pageDefinition.content.map(c => renderer.renderPageContentSegment(pageDirectoryPath, siteDefiniton, pageDefinition, c)));
             promises = promises.concat([
                 q.when('</div>'),
-                // TODO render footer
+                renderer.renderFooter(pageDirectoryPath, siteDefiniton, pageDefinition),
                 q.when('</div></body></html>'),
             ]);
             return q.all(promises);
@@ -212,6 +213,8 @@ Renderer.prototype.renderPageContentSegment = function renderPageContentSegment(
                 return renderer._renderPageContentSegmentHeadline(outputDirPath, siteDefiniton, pageDefinition, content);
             case 'image':
                 return renderer._renderPageContentSegmentImage(outputDirPath, siteDefiniton, pageDefinition, content);
+            case 'lines':
+                return renderer._renderPageContentSegmentLines(outputDirPath, siteDefiniton, pageDefinition, content);
             case 'paragraph':
                 return renderer._renderPageContentSegmentParagraph(outputDirPath, siteDefiniton, pageDefinition, content);
             }
@@ -255,8 +258,20 @@ Renderer.prototype._renderPageContentSegmentImage = function _renderPageContentS
         });
 };
 
+Renderer.prototype._renderPageContentSegmentLines = function _renderPageContentSegmentLines(outputDirPath, siteDefiniton, pageDefinition, content){
+    let htmlArtifacts = [
+        '<p class="ep-lines">',
+    ];
+    htmlArtifacts = htmlArtifacts.concat(content.lines.map(line => `<span>${escapeHtml(line)}</span><br/>`));
+    htmlArtifacts.push('</p>');
+    return htmlArtifacts.join('');
+};
+
 Renderer.prototype._renderPageContentSegmentParagraph = function _renderPageContentSegmentParagraph(outputDirPath, siteDefiniton, pageDefinition, content){
     return `<p class="ep-paragraph">${escapeHtml(content.text)}</p>`;
+};
+
+Renderer.prototype.renderFooter = function renderFooter(outputDirPath, siteDefiniton, pageDefinition){
 };
 
 if(require.main === module){

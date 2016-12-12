@@ -1,0 +1,21 @@
+{
+    "title": "Imprint",
+    "content": [
+        {
+            "type": "headline",
+            "text": "Imprint"
+        },
+        {
+            "type": "paragraph",
+            "text": "Responsible for the content on this page is:"
+        },
+        {
+            "type": "lines",
+            "lines": [
+                "Max Musterman",
+                "123 Fakestreet",
+                "Faketown"
+            ]
+        }
+    ]
+}
