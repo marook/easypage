@@ -74,13 +74,15 @@ Renderer.prototype.renderPage = function renderPage(siteDefiniton, pageDefinitio
             let promises = [
                 q.when('<!DOCTYPE html>\n<html>'),
                 renderer.renderPageHead(pageDirectoryPath, siteDefiniton, pageDefinition),
-                q.when('<body>'),
+                q.when('<body><div class="ep-container">'),
                 renderer.renderPageNavigation(pageDirectoryPath, siteDefiniton, pageDefinition),
+                q.when('<div class="ep-content">'),
             ];
             promises = promises.concat(pageDefinition.content.map(c => renderer.renderPageContentSegment(pageDirectoryPath, siteDefiniton, pageDefinition, c)));
             promises = promises.concat([
+                q.when('</div>'),
                 // TODO render footer
-                q.when('</body></html>'),
+                q.when('</div></body></html>'),
             ]);
             return q.all(promises);
         })

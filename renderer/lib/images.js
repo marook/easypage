@@ -3,7 +3,7 @@ const imagemagick = require('./q-imagemagick');
 const fs = require('q-io/fs');
 const q = require('q');
 
-const MAX_IMAGE_WIDTH = 1200;
+const MAX_IMAGE_WIDTH = 1025;
 const MAX_IMAGE_HEIGHT = 600;
 
 function webifyImage(outputImagePath, inputImagePath){
