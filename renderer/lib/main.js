@@ -1,3 +1,4 @@
+// -*- coding: utf-8 -*-
 const escapeHtml = require('escape-html');
 const fs = require('q-io/fs');
 const images = require('./images');
