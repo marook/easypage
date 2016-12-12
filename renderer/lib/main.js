@@ -37,7 +37,7 @@ Renderer.prototype.loadAndRenderPage = function loadAndRenderPage(siteDefinition
             return loadDefinition(path.join(siteDefinition.basePath, pageDefinitionPath));
         })
         .then(function(pageDefinition){
-            return renderer.renderPage(siteDefinition, pageDefinition);
+            return renderer.renderPage(siteDefinition, pageDefinition, siteDefinition.pages[0] === pageDefinitionPath);
         });
 };
 
@@ -55,12 +55,12 @@ function loadDefinition(definitionPath){
         });
 }
 
-Renderer.prototype.renderPage = function renderPage(siteDefiniton, pageDefinition){
+Renderer.prototype.renderPage = function renderPage(siteDefiniton, pageDefinition, firstPage){
     const renderer = this;
     let pageDirectoryPath;
     return q.when()
         .then(function(){
-            return renderer._buildPageDirectory(siteDefiniton, pageDefinition);
+            return renderer._buildPageDirectory(siteDefiniton, pageDefinition, firstPage);
         })
         .then(function(_pageDirectoryPath_){
             pageDirectoryPath = _pageDirectoryPath_;
@@ -85,8 +85,15 @@ Renderer.prototype.renderPage = function renderPage(siteDefiniton, pageDefinitio
         });
 };
 
-Renderer.prototype._buildPageDirectory = function(siteDefiniton, pageDefinition){
+Renderer.prototype._buildPageDirectory = function(siteDefiniton, pageDefinition, firstPage){
     const renderer = this;
+    if(firstPage){
+        /*
+         * the first page is by definition the homepage which will be
+         * rendered into the root directory.
+         */
+        return renderer.outputDir;
+    }
     let pageDirectoryPath;
     return q.when()
         .then(function(){
