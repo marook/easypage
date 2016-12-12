@@ -1,5 +1,8 @@
 {
     "title": "Demo Site",
+    "stylesheets": [
+        "/demo.css"
+    ],
     "pages": [
         "home.json"
     ],

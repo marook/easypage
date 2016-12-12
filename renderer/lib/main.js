@@ -57,15 +57,31 @@ function loadDefinition(definitionPath){
 
 Renderer.prototype.renderPage = function renderPage(siteDefiniton, pageDefinition){
     const renderer = this;
+    let pageDirectoryPath;
     return q.when()
         .then(function(){
             return renderer._buildPageDirectory(siteDefiniton, pageDefinition);
         })
-        .then(function(pageDirectoryPath){
-            return q.all(pageDefinition.content.map(c => renderer.renderPageContentSegment(pageDirectoryPath, siteDefiniton, pageDefinition, c)));
+        .then(function(_pageDirectoryPath_){
+            pageDirectoryPath = _pageDirectoryPath_;
+            let promises = [
+                q.when('<!DOCTYPE html>\n<html>'),
+                renderer.renderPageHead(pageDirectoryPath, siteDefiniton, pageDefinition),
+                q.when('<body>'),
+                // TODO render navigation
+            ];
+            promises = promises.concat(pageDefinition.content.map(c => renderer.renderPageContentSegment(pageDirectoryPath, siteDefiniton, pageDefinition, c)));
+            promises = promises.concat([
+                // TODO render footer
+                q.when('</body></html>'),
+            ]);
+            return q.all(promises);
         })
         .then(function(pageContentHtmlFragments){
-            console.log('>>>', pageContentHtmlFragments.join(''));
+            const html = pageContentHtmlFragments.join('');
+            return fs.write(path.join(pageDirectoryPath, 'index.html'), html, {
+                charset: 'utf-8',
+            });
         });
 };
 
@@ -105,8 +121,20 @@ function urlifyLabel(label){
             urlifiedLabelChars.push(c);
         }
     }
-    return urlifiedLabelChars.join();
+    return urlifiedLabelChars.join('');
 }
+
+Renderer.prototype.renderPageHead = function renderPageHead(outputDirPath, siteDefiniton, pageDefinition){
+    return q.when()
+        .then(function(){
+            let htmlArtifacts = [
+                `<head><meta charset="UTF-8"/><title>${pageDefinition.title} - ${siteDefiniton.title}</title>`,
+            ];
+            htmlArtifacts = htmlArtifacts.concat(siteDefiniton.stylesheets.map(s => `<link rel="stylesheet" type="text/css" href="${s}"/>`));
+            htmlArtifacts.push('</head>');
+            return htmlArtifacts.join('');
+        });
+};
 
 Renderer.prototype.renderPageContentSegment = function renderPageContentSegment(outputDirPath, siteDefiniton, pageDefinition, content){
     const renderer = this;
@@ -115,7 +143,7 @@ Renderer.prototype.renderPageContentSegment = function renderPageContentSegment(
             switch(content.type){
             default:
                 return q.reject(new Error('ep.unknownContentSegmentType: ' + content.type));
-            case 'h1':
+            case 'headline':
                 return renderer._renderPageContentSegmentHeadline(outputDirPath, siteDefiniton, pageDefinition, content);
             case 'image':
                 return renderer._renderPageContentSegmentImage(outputDirPath, siteDefiniton, pageDefinition, content);
@@ -126,7 +154,7 @@ Renderer.prototype.renderPageContentSegment = function renderPageContentSegment(
 };
 
 Renderer.prototype._renderPageContentSegmentHeadline = function _renderPageContentSegmentHeadline(outputDirPath, siteDefiniton, pageDefinition, content){
-    return `<h1>${escapeHtml(content.text)}</h1>`;
+    return `<h1 class="ep-headline">${escapeHtml(content.text)}</h1>`;
 };
 
 Renderer.prototype._renderPageContentSegmentImage = function _renderPageContentSegmentImage(outputDirPath, siteDefiniton, pageDefinition, content){
@@ -134,7 +162,7 @@ Renderer.prototype._renderPageContentSegmentImage = function _renderPageContentS
 };
 
 Renderer.prototype._renderPageContentSegmentParagraph = function _renderPageContentSegmentParagraph(outputDirPath, siteDefiniton, pageDefinition, content){
-    return `<p>${escapeHtml(content.text)}</p>`;
+    return `<p class="ep-paragraph">${escapeHtml(content.text)}</p>`;
 };
 
 if(require.main === module){

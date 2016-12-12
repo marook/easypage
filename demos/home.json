@@ -2,7 +2,7 @@
     "title": "Homepage",
     "content": [
         {
-            "type": "h1",
+            "type": "headline",
             "text": "Overview"
         },
         {
