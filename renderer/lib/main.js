@@ -1,5 +1,6 @@
 const escapeHtml = require('escape-html');
 const fs = require('q-io/fs');
+const images = require('./images');
 const path = require('path');
 const q = require('q');
 
@@ -32,11 +33,16 @@ Renderer.prototype.renderSite = function renderSite(siteDefinition){
 
 Renderer.prototype.loadAndRenderPage = function loadAndRenderPage(siteDefinition, pageDefinitionPath){
     const renderer = this;
+    let fullPageDefinitionPath;
     return q.when()
         .then(function(){
-            return loadDefinition(path.join(siteDefinition.basePath, pageDefinitionPath));
+            fullPageDefinitionPath = path.join(siteDefinition.basePath, pageDefinitionPath);
+            return loadDefinition(fullPageDefinitionPath);
         })
         .then(function(pageDefinition){
+            if(!pageDefinition.basePath){
+                pageDefinition.basePath = path.dirname(fullPageDefinitionPath);
+            }
             return renderer.renderPage(siteDefinition, pageDefinition, siteDefinition.pages[0] === pageDefinitionPath);
         });
 };
@@ -209,7 +215,15 @@ Renderer.prototype._renderPageContentSegmentHeadline = function _renderPageConte
 };
 
 Renderer.prototype._renderPageContentSegmentImage = function _renderPageContentSegmentImage(outputDirPath, siteDefiniton, pageDefinition, content){
-    return ''; // TODO
+    let renderedImagePath;
+    return q.when()
+        .then(function(){
+            renderedImagePath = path.join(outputDirPath, content.src);
+            return images.webifyImage(renderedImagePath, path.join(pageDefinition.basePath, content.src));
+        })
+        .then(function(imageResolution){
+            return `<div class="ep-image"><img src="${path.basename(renderedImagePath)}"/></div>`;
+        });
 };
 
 Renderer.prototype._renderPageContentSegmentParagraph = function _renderPageContentSegmentParagraph(outputDirPath, siteDefiniton, pageDefinition, content){
