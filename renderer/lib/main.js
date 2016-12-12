@@ -68,7 +68,7 @@ Renderer.prototype.renderPage = function renderPage(siteDefiniton, pageDefinitio
                 q.when('<!DOCTYPE html>\n<html>'),
                 renderer.renderPageHead(pageDirectoryPath, siteDefiniton, pageDefinition),
                 q.when('<body>'),
-                // TODO render navigation
+                renderer.renderPageNavigation(pageDirectoryPath, siteDefiniton, pageDefinition),
             ];
             promises = promises.concat(pageDefinition.content.map(c => renderer.renderPageContentSegment(pageDirectoryPath, siteDefiniton, pageDefinition, c)));
             promises = promises.concat([
@@ -87,12 +87,28 @@ Renderer.prototype.renderPage = function renderPage(siteDefiniton, pageDefinitio
 
 Renderer.prototype._buildPageDirectory = function(siteDefiniton, pageDefinition, firstPage){
     const renderer = this;
+    let pageDirectoryPath;
+    return q.when()
+        .then(function(){
+            return renderer._getPageDirectoryName(siteDefiniton, pageDefinition, firstPage);
+        })
+        .then(function(pageDirectoryName){
+            pageDirectoryPath = path.join(renderer.outputDir, pageDirectoryName);
+            return fs.makeTree(pageDirectoryPath);
+        })
+        .then(function(){
+            return pageDirectoryPath;
+        });
+};
+
+Renderer.prototype._getPageDirectoryName = function(siteDefiniton, pageDefinition, firstPage){
+    const renderer = this;
     if(firstPage){
         /*
          * the first page is by definition the homepage which will be
          * rendered into the root directory.
          */
-        return renderer.outputDir;
+        return '';
     }
     let pageDirectoryPath;
     return q.when()
@@ -101,11 +117,7 @@ Renderer.prototype._buildPageDirectory = function(siteDefiniton, pageDefinition,
             if(title.length === 0){
                 return q.reject(new Error('ep.pageTitleRequired'));
             }
-            pageDirectoryPath = path.join(renderer.outputDir, urlifyLabel(title));
-            return fs.makeTree(pageDirectoryPath);
-        })
-        .then(function(){
-            return pageDirectoryPath;
+            return urlifyLabel(title);
         });
 };
 
@@ -140,6 +152,38 @@ Renderer.prototype.renderPageHead = function renderPageHead(outputDirPath, siteD
             htmlArtifacts = htmlArtifacts.concat(siteDefiniton.stylesheets.map(s => `<link rel="stylesheet" type="text/css" href="${s}"/>`));
             htmlArtifacts.push('</head>');
             return htmlArtifacts.join('');
+        });
+};
+
+Renderer.prototype.renderPageNavigation = function renderPageNavigation(outputDirPath, siteDefiniton, pageDefinition){
+    const renderer = this;
+    return q.when()
+        .then(function(){
+            return q.all([
+                q.when('<nav class="ep-page-navigation"><ul>'),
+                renderer.renderPageNavigationLinks(outputDirPath, siteDefiniton, pageDefinition),
+                q.when('</ul></nav>'),
+            ]);
+        })
+        .then(function(htmlArtifacts){
+            return htmlArtifacts.join('');
+        });
+};
+
+Renderer.prototype.renderPageNavigationLinks = function renderPageNavigationLinks(outputDirPath, siteDefinition, activePageDefinition){
+    const renderer = this;
+    let pageDefinitions;
+    return q.when()
+        .then(function(){
+            return q.all(siteDefinition.pages.map(pageDefinitionPath => loadDefinition(path.join(siteDefinition.basePath, pageDefinitionPath))));
+        })
+        .then(function(_pageDefinitions_){
+            pageDefinitions = _pageDefinitions_;
+            return q.all(pageDefinitions.map((pd, i) => renderer._getPageDirectoryName(siteDefinition, pd, i === 0)));
+        })
+        .then(function(pageDirectoryNames){
+            return pageDefinitions.map((pd, i) => `<li><a href="/${pageDirectoryNames[i]}">${escapeHtml(pd.title)}</a></li>`)
+                .join('');
         });
 };
 
