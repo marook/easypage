@@ -1,0 +1,12 @@
+{
+    "title": "Articles",
+    "content": [
+        {
+            "type": "headline",
+            "text": "Articles"
+        },
+        {
+            "type": "articles-archive"
+        }
+    ]
+}

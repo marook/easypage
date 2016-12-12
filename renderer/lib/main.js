@@ -204,6 +204,8 @@ Renderer.prototype.renderPageContentSegment = function renderPageContentSegment(
             switch(content.type){
             default:
                 return q.reject(new Error('ep.unknownContentSegmentType: ' + content.type));
+            case 'articles-archive':
+                return renderer._renderPageContentSegmentArticlesArchive(outputDirPath, siteDefiniton, pageDefinition, content);
             case 'headline':
                 return renderer._renderPageContentSegmentHeadline(outputDirPath, siteDefiniton, pageDefinition, content);
             case 'image':
@@ -211,6 +213,27 @@ Renderer.prototype.renderPageContentSegment = function renderPageContentSegment(
             case 'paragraph':
                 return renderer._renderPageContentSegmentParagraph(outputDirPath, siteDefiniton, pageDefinition, content);
             }
+        });
+};
+
+Renderer.prototype._renderPageContentSegmentArticlesArchive = function _renderPageContentSegmentArticlesArchive(outputDirPath, siteDefinition, pageDefinition, content){
+    const renderer = this;
+    let articleDefinitions;
+    return q.when()
+        .then(function(){
+            return q.all(siteDefinition.articles.map(articleDefinitionPath => loadDefinition(path.join(siteDefinition.basePath, articleDefinitionPath))));
+        })
+        .then(function(_articleDefinitions_){
+            articleDefinitions = _articleDefinitions_;
+            return q.all(articleDefinitions.map((ad, i) => renderer._getPageDirectoryName(siteDefinition, ad, false)));
+        })
+        .then(function(articleDirectoryNames){
+            let htmlFragments = [
+                '<ul class="ep-article-archive">',
+            ];
+            htmlFragments = htmlFragments.concat(articleDefinitions.map((ad, i) => `<li><a class="ep-article-archive-link" href="/${articleDirectoryNames[i]}">${ad.title}</a></li>`));
+            htmlFragments.push('</ul>');
+            return htmlFragments.join('');
         });
 };
 

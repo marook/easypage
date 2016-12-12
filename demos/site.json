@@ -5,8 +5,11 @@
     ],
     "pages": [
         "home.json",
-        "someOtherPage.json"
+        "someOtherPage.json",
+        "articles.json"
     ],
     "articles": [
+        "article2.json",
+        "article1.json"
     ]
 }
