@@ -243,5 +243,6 @@ if(require.main === module){
 }
 
 module.exports = {
+    renderSite,
     Renderer,
 };
