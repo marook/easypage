@@ -142,6 +142,8 @@ const URLIFY_CHARACTER_REPLACEMENT_MAP = new Map([
     ['&', '_'],
     ['<', ''],
     ['>', ''],
+    ['\'', ''],
+    ['"', ''],
 ]);
 
 function urlifyLabel(label){
