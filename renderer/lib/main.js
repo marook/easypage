@@ -319,7 +319,31 @@ Renderer.prototype._renderPageContentSegmentParagraph = function _renderPageCont
 };
 
 Renderer.prototype.renderFooter = function renderFooter(outputDirPath, pageDefinition){
-    // TODO
+    const renderer = this;
+    let siteDefinition, pageDefinitions;
+    return q.when()
+        .then(function(){
+            return renderer._siteDefinition;
+        })
+        .then(function(_siteDefinition_){
+            siteDefinition = _siteDefinition_;
+            return q.all(siteDefinition.footer.map(f => renderer._getPageDefinition(f)));
+        })
+        .then(function(_pageDefinitions_){
+            pageDefinitions = _pageDefinitions_;
+            return q.all(pageDefinitions.map(pd => renderer._getPageDirectoryName(pd, false)));
+        })
+        .then(function(pageDefinitionPaths){
+            let htmlFragments = [
+                q.when('<footer class="ep-footer"><ul>'),
+            ];
+            htmlFragments = htmlFragments.concat(pageDefinitions.map((f, i) => `<li><a href="${pageDefinitionPaths[i]}">${escapeHtml(f.title)}</a></li>`));
+            htmlFragments.push('</ul></footer>');
+            return q.all(htmlFragments);
+        })
+        .then(function(htmlFragments){
+            return htmlFragments.join('');
+        });
 };
 
 if(require.main === module){
