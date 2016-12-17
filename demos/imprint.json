@@ -10,7 +10,7 @@
             "text": "Responsible for the content on this page is:"
         },
         {
-            "type": "lines",
+            "type": "list",
             "lines": [
                 "Max Musterman",
                 "123 Fakestreet",

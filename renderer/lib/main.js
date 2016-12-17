@@ -256,8 +256,8 @@ Renderer.prototype.renderPageContentSegment = function renderPageContentSegment(
                 return renderer._renderPageContentSegmentHeadline(outputDirPath, pageDefinition, content);
             case 'image':
                 return renderer._renderPageContentSegmentImage(outputDirPath, pageDefinition, content);
-            case 'lines':
-                return renderer._renderPageContentSegmentLines(outputDirPath, pageDefinition, content);
+            case 'list':
+                return renderer._renderPageContentSegmentList(outputDirPath, pageDefinition, content);
             case 'paragraph':
                 return renderer._renderPageContentSegmentParagraph(outputDirPath, pageDefinition, content);
             }
@@ -305,12 +305,12 @@ Renderer.prototype._renderPageContentSegmentImage = function _renderPageContentS
         });
 };
 
-Renderer.prototype._renderPageContentSegmentLines = function _renderPageContentSegmentLines(outputDirPath, pageDefinition, content){
+Renderer.prototype._renderPageContentSegmentList = function _renderPageContentSegmentList(outputDirPath, pageDefinition, content){
     let htmlArtifacts = [
-        '<p class="ep-lines">',
+        `<ul class="ep-list ep-list-style-${content.style || 'none'}">`,
     ];
-    htmlArtifacts = htmlArtifacts.concat(content.lines.map(line => `<span>${escapeHtml(line)}</span><br/>`));
-    htmlArtifacts.push('</p>');
+    htmlArtifacts = htmlArtifacts.concat(content.lines.map(line => `<li>${escapeHtml(line)}</li>`));
+    htmlArtifacts.push('</ul>');
     return htmlArtifacts.join('');
 };
 
