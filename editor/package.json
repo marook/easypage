@@ -1,0 +1,31 @@
+{
+    "name": "easypage-editor",
+    "version": "0.1.0",
+    "description": "page editor for easypage format",
+    "author": {
+        "name": "Markus Peröbner",
+        "email": "markus.peroebner@gmail.com"
+    },
+    "engines":{
+        "node": ">=4.4.5"
+    },
+    "main": "lib/main",
+    "dependencies": {
+        "angular": "1.6.0",
+        "angular-bootstrap": "0.12.2",
+        "angular-ui-router": "0.3.2",
+        "bootstrap": "3.3.7",
+        "express": "4.14.0",
+        "gulp": "3.9.1",
+        "gulp-concat": "2.6.1",
+        "q": "1.4.1",
+        "q-io": "1.13.2",
+        "yargs": "6.5.0"
+    },
+    "devDependencies": {
+        "gulp-connect": "5.0.0"
+    },
+    "scripts": {
+        "postinstall": "./node_modules/.bin/gulp"
+    }
+}

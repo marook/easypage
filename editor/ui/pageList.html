@@ -1,0 +1,10 @@
+<ul class="list-group">
+  <div class="btn-group">
+    <button class="btn btn-default" ng-click="addPage()">
+      <span class="glyphicon glyphicon-plus"></span>
+    </button>
+  </div>
+  <li ng-repeat="page in pages" class="list-group-item">
+    {{page.title}}
+  </li>
+</ul>
