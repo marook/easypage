@@ -337,7 +337,7 @@ Renderer.prototype.renderFooter = function renderFooter(outputDirPath, pageDefin
             let htmlFragments = [
                 q.when('<footer class="ep-footer"><ul>'),
             ];
-            htmlFragments = htmlFragments.concat(pageDefinitions.map((f, i) => `<li><a href="${pageDefinitionPaths[i]}">${escapeHtml(f.title)}</a></li>`));
+            htmlFragments = htmlFragments.concat(pageDefinitions.map((f, i) => `<li><a href="/${pageDefinitionPaths[i]}">${escapeHtml(f.title)}</a></li>`));
             htmlFragments.push('</ul></footer>');
             return q.all(htmlFragments);
         })
