@@ -1,0 +1,13 @@
+.epe-content-segment {
+    margin-bottom: 20px;
+}
+
+.epe-content-segment-type-name {
+    display: inline-block;
+    font-style: italic;
+    padding-left: 10px;
+}
+
+.epe-paragraph-text {
+    height: 200px !important;
+}

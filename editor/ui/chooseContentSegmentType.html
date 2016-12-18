@@ -1,0 +1,21 @@
+<form novalidate ng-submit="submitContentSegmentType()">
+  <div class="modal-header">
+    <h4>Neue Komponente auswählen...</h4>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label>Typ der Komponente</label>
+      <select ng-model="contentSegmentType" ng-options="tt.type as tt.title for tt in contentSegmentTypes track by tt.type" class="form-control"></select>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="pull-right">
+      <button type="submit" class="btn btn-primary" ng-disabled="!contentSegmentType">
+        Auswählen
+      </button>
+      <button type="button" class="btn btn-default" ng-click="cancel()">
+        Abbrechen
+      </button>
+    </div>
+  </div>
+</form>

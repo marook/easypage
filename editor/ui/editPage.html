@@ -1,24 +1,39 @@
 <form novalidate>
   <h1>{{page.title}}</h1>
 
-  <div ng-repeat="contentItem in page.content">
+  <div ng-repeat="contentItem in page.content" class="epe-content-segment">
     <div class="btn-group">
-      <button class="btn btn-default">
+      <button class="btn btn-xs btn-default" ng-disabled="$index === 0" ng-click="moveContentSegmentUpwards($index)" title="Komponente nach oben schieben">
         <span class="glyphicon glyphicon-arrow-up"></span>
       </button>
-      <button class="btn btn-default">
+      <button class="btn btn-xs btn-default" ng-disabled="$index >= page.content.length - 1" ng-click="moveContentSegmentDownwards($index)" title="Komponente nach unten schieben">
         <span class="glyphicon glyphicon-arrow-down"></span>
       </button>
+      <button class="btn btn-xs btn-danger" ng-click="removeContentSegment($index)" title="Komponente entfernen">
+          <span class="glyphicon glyphicon-remove"></span>
+      </button>
+      <span class="epe-content-segment-type-name">
+        {{CONTENT_SEGMENT_TYPE_TITLES.get(contentItem.type)}}
+      </span>
     </div>
     <div ng-switch="contentItem.type">
       <div ng-switch-default></div>
+      <div ng-switch-when="headline">
+        <div class="form-group">
+          <input class="form-control" ng-model="contentItem.text"/>
+        </div>
+      </div>
       <div ng-switch-when="paragraph">
         <div class="form-group">
-          <textarea class="form-control" ng-model="contentItem.text"></textarea>
+          <textarea class="form-control epe-paragraph-text" ng-model="contentItem.text"></textarea>
         </div>
       </div>
     </div>
   </div>
+
+  <button class="btn btn-primary" title="Komponente hinzufügen..." ng-click="addContentSegment()">
+    <span class="glyphicon glyphicon-plus"></span>
+  </button>
 
   <div class="pull-right">
     <button type="submit" class="btn btn-primary">
