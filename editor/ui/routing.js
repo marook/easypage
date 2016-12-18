@@ -5,5 +5,10 @@ app.config(function($stateProvider, $urlRouterProvider){
             url: '/',
             templateUrl: 'site.html',
             controller: 'SiteController',
+        })
+        .state('editPage', {
+            url: '/edit/:pageId',
+            templateUrl: 'editPage.html',
+            controller: 'EditPageController',
         });
 });

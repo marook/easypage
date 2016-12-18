@@ -1,10 +1,20 @@
 <ul class="list-group">
   <div class="btn-group">
-    <button class="btn btn-default" ng-click="addPage()">
+    <button class="btn btn-default" ng-click="addPage()" title="Neue Seite anlegen...">
       <span class="glyphicon glyphicon-plus"></span>
     </button>
   </div>
   <li ng-repeat="page in pages" class="list-group-item">
     {{page.title}}
+    <div class="pull-right">
+      <div class="btn-group">
+        <button class="btn btn-xs btn-primary" ng-click="editPage({pageIndex: $index, page: page})" title="Seite bearbeiten...">
+          <span class="glyphicon glyphicon-pencil"></span>
+        </button>
+        <button class="btn btn-xs btn-danger" ng-click="removePage({pageIndex: $index, page: page})" title="Seite löschen">
+          <span class="glyphicon glyphicon-remove"></span>
+        </button>
+      </div>
+    </div>
   </li>
 </ul>

@@ -1,0 +1,8 @@
+<div class="modal-header"><span class="label label-danger">ERROR</span> Irgendwas ging schief :(</div>
+<div class="modal-body">
+  <div ng-switch="!!error.message">
+    <div ng-switch-default>{{error}}</div>
+    <div ng-switch-when="true">{{error.message}}</div>
+  </div>
+  <div ng-if="error.stack"><pre>{{error.stack}}</pre></div>
+</div>

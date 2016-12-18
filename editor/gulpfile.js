@@ -22,7 +22,7 @@ gulp.task('css-to-www', function(){
 gulp.task('lib-js-to-www', function(){
     return gulp.src([
         'node_modules/angular/angular.min.js',
-        'node_modules/angular-bootstrap/ui-bootstrap.min.js',
+        'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
         'node_modules/angular-ui-router/release/angular-ui-router.min.js',
     ])
         .pipe(concat('lib.js'))
