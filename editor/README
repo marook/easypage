@@ -1,0 +1,18 @@
+easypage-editor
+
+1) Starting the Server
+2) Development
+
+
+------------------------------------------------------------------------
+Starting the Server
+
+$ node . --port 1234
+
+
+------------------------------------------------------------------------
+Development
+
+$ gulp build connect
+
+Launches a webserver on http://localhost:9001
