@@ -1,7 +1,7 @@
 <form novalidate>
   <h1>{{page.title}}</h1>
 
-  <div ng-repeat="contentItem in page.content" class="epe-content-segment">
+  <div ng-repeat="contentItem in page.content" class="epe-content-segment epe-content-segment-type-{{contentItem.type}}">
     <div class="btn-group">
       <button class="btn btn-xs btn-default" ng-disabled="$index === 0" ng-click="moveContentSegmentUpwards($index)" title="Komponente nach oben schieben">
         <span class="glyphicon glyphicon-arrow-up"></span>
@@ -12,7 +12,7 @@
       <button class="btn btn-xs btn-danger" ng-click="removeContentSegment($index)" title="Komponente entfernen">
           <span class="glyphicon glyphicon-remove"></span>
       </button>
-      <span class="epe-content-segment-type-name">
+      <span class="epe-content-segment-label-type">
         {{CONTENT_SEGMENT_TYPE_TITLES.get(contentItem.type)}}
       </span>
     </div>

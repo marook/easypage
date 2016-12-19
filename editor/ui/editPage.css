@@ -2,7 +2,7 @@
     margin-bottom: 20px;
 }
 
-.epe-content-segment-type-name {
+.epe-content-segment-label-type {
     display: inline-block;
     font-style: italic;
     padding-left: 10px;
@@ -10,4 +10,9 @@
 
 .epe-paragraph-text {
     height: 200px !important;
+}
+
+.epe-content-segment-type-headline input {
+    font-size: 2em;
+    height: 42px;
 }
