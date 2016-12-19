@@ -5,15 +5,15 @@
   <div class="modal-body">
     <div class="form-group">
       <label>Titel der Seite</label>
-      <input ng-model="pageTitle" type="text" class="form-control" placeholder="Titel der Seite"/>
+      <input ng-model="pageTitle" type="text" class="form-control" placeholder="Titel der Seite" ng-disabled="creatingPage"/>
     </div>
   </div>
   <div class="modal-footer">
     <div class="pull-right">
-      <button type="submit" class="btn btn-primary">
+      <button type="submit" class="btn btn-primary" ng-disabled="creatingPage">
         Anlegen
       </button>
-      <button type="button" class="btn btn-default" ng-click="cancel()">
+      <button type="button" class="btn btn-default" ng-click="cancel()" ng-disabled="creatingPage">
         Abbrechen
       </button>
     </div>

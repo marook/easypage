@@ -4,6 +4,7 @@ app.controller('AddPageController', function($scope, modalParams, $uibModalInsta
     }
 
     function initScope(){
+        $scope.creatingPage = false;
         $scope.pageTitle = modalParams.pageTitle || '';
 
         $scope.createPage = createPage;
@@ -11,6 +12,7 @@ app.controller('AddPageController', function($scope, modalParams, $uibModalInsta
     }
 
     function createPage(){
+        $scope.creatingPage = true;
         return $q.when()
             .then(function(){
                 return Server.addPage($scope.pageTitle);
@@ -18,7 +20,10 @@ app.controller('AddPageController', function($scope, modalParams, $uibModalInsta
             .then(function(pageId){
                 return $uibModalInstance.close(pageId);
             })
-            .catch(ErrorHandler.handleError);
+            .catch(ErrorHandler.handleError)
+            .finally(function(){
+                $scope.creatingPage = false;
+            });
     }
 
     function cancel(){

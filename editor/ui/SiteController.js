@@ -1,30 +1,12 @@
-app.controller('SiteController', function($scope, $uibModal, $state, $q){
+app.controller('SiteController', function($scope, $uibModal, $state, $q, Server, ErrorHandler){
     function main(){
         initScope();
+        fetchSite();
     }
 
     function initScope(){
-        $scope.site = {
-            title: 'Demo Seite',
-            pages: [
-                {
-                    id: 's1.json',
-                    title: 'Seite 1',
-                },
-            ],
-            articles: [
-                {
-                    id: 'a1.json',
-                    title: 'Artikel 1',
-                },
-            ],
-            footer: [
-                {
-                    id: 'f1.json',
-                    title: 'Footer 1',
-                },
-            ],
-        };
+        $scope.siteLoading = false;
+        $scope.site = null;
         
         $scope.addPage = addPage;
         $scope.editPage = editPage;
@@ -77,6 +59,18 @@ app.controller('SiteController', function($scope, $uibModal, $state, $q){
     function addFooter(){
         alert('add footer');
         // TODO
+    }
+
+    function fetchSite(){
+        $scope.siteLoading = true;
+        return Server.getSite()
+            .then(function(site){
+                $scope.site = site;
+            })
+            .catch(ErrorHandler.handleError)
+            .finally(function(){
+                $scope.siteLoading = false;
+            });
     }
 
     main();

@@ -1,19 +1,22 @@
-<h1>{{site.title}}</h1>
+<busy-indicator ng-if="siteLoading"></busy-indicator>
+<div ng-hide="siteLoading">
+  <h1>{{site.title}}</h1>
 
-<h2>Seiten</h2>
-<page-list
-   data-pages="site.pages"
-   data-add-page="addPage()"
-   data-edit-page="editPage(page)"></page-list>
+  <h2>Seiten</h2>
+  <page-list
+     data-pages="site.pages"
+     data-add-page="addPage()"
+     data-edit-page="editPage(page)"></page-list>
 
-<h2>Artikel</h2>
-<page-list
-   data-pages="site.articles"
-   data-add-page="addArticle()"
-   data-edit-page="editPage(page)"></page-list>
+  <h2>Artikel</h2>
+  <page-list
+     data-pages="site.articles"
+     data-add-page="addArticle()"
+     data-edit-page="editPage(page)"></page-list>
 
-<h2>Footer</h2>
-<page-list
-   data-pages="site.footer"
-   data-add-page="addFooter()"
-   data-edit-page="editPage(page)"></page-list>
+  <h2>Footer</h2>
+  <page-list
+     data-pages="site.footer"
+     data-add-page="addFooter()"
+     data-edit-page="editPage(page)"></page-list>
+</div>
