@@ -1,15 +1,16 @@
+<!-- -*- coding: utf-8 -*- -->
 <form novalidate ng-submit="savePage()">
   <busy-indicator ng-if="pageLoading"></busy-indicator>
   <h1 ng-hide="pageLoading">{{page.title}}</h1>
   <div ng-repeat="contentItem in page.content" class="epe-content-segment epe-content-segment-type-{{contentItem.type}}">
     <div class="btn-group">
-      <button class="btn btn-xs btn-default" ng-disabled="$index === 0 || pageSaving" ng-click="moveContentSegmentUpwards($index)" title="Komponente nach oben schieben">
+      <button type="button" class="btn btn-xs btn-default" ng-disabled="$index === 0 || pageSaving" ng-click="moveContentSegmentUpwards($index)" title="Komponente nach oben schieben">
         <span class="glyphicon glyphicon-arrow-up"></span>
       </button>
-      <button class="btn btn-xs btn-default" ng-disabled="$index >= page.content.length - 1 || pageSaving" ng-click="moveContentSegmentDownwards($index)" title="Komponente nach unten schieben">
+      <button type="button" class="btn btn-xs btn-default" ng-disabled="$index >= page.content.length - 1 || pageSaving" ng-click="moveContentSegmentDownwards($index)" title="Komponente nach unten schieben">
         <span class="glyphicon glyphicon-arrow-down"></span>
       </button>
-      <button class="btn btn-xs btn-danger" ng-click="removeContentSegment($index)" title="Komponente entfernen">
+      <button type="button" class="btn btn-xs btn-danger" ng-click="removeContentSegment($index)" title="Komponente entfernen">
           <span class="glyphicon glyphicon-remove"></span>
       </button>
       <span class="epe-content-segment-label-type">
@@ -23,6 +24,34 @@
           <input class="form-control" ng-model="contentItem.text" ng-disabled="pageSaving"/>
         </div>
       </div>
+      <div ng-switch-when="list">
+        <div class="form-group">
+          <label>Formatierung Aufzählungszeichen</label>
+          <select class="form-control" ng-model="contentItem.style" ng-disabled="pageSaving" ng-options="s.id as s.title for s in listStyles track by s.id"></select>
+        </div>
+        <div class="form-group">
+          <label>Elemente der Aufzählung</label>
+          <div ng-repeat="line in contentItem.lines">
+            <div class="row">
+              <div class="col-md-11">
+                <div class="form-group">
+                  <input type="text" ng-model="line" ng-disabled="pageSaving" class="form-control"/>
+                </div>
+              </div>
+              <div class="col-md-1">
+                <div class="pull-right">
+                  <button type="button" class="btn btn-xs btn-danger" ng-click="removeContentSegmentListLine(contentItem, $index)" ng-disabled="pageSaving" title="Zeile aus der Aufzählung entfernen">
+                    <span class="glyphicon glyphicon-minus"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn btn-xs btn-primary" ng-click="addLineToListContentSegment(contentItem)" title="Neue Zeile in Aufzählung hinzufügen">
+            <span class="glyphicon glyphicon-plus"></span>
+          </button>
+        </div>
+      </div>
       <div ng-switch-when="paragraph">
         <div class="form-group">
           <textarea class="form-control epe-paragraph-text" ng-model="contentItem.text" ng-disabled="pageSaving"></textarea>
@@ -31,7 +60,7 @@
     </div>
   </div>
 
-  <button type="button" class="btn btn-primary" title="Komponente hinzufügen..." ng-click="addContentSegment()" ng-disabled="pageLoading || pageSaving">
+  <button type="button" class="btn btn-primary" title="Komponente hinzufÃ¼gen..." ng-click="addContentSegment()" ng-disabled="pageLoading || pageSaving">
     <span class="glyphicon glyphicon-plus"></span>
   </button>
 

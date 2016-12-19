@@ -9,11 +9,23 @@ app.controller('EditPageController', function($scope, $q, $state, $stateParams, 
         $scope.pageLoading = false;
         $scope.pageSaving = false;
         $scope.page = null;
+        $scope.listStyles = [
+            {
+                id: 'none',
+                title: 'keine',
+            },
+            {
+                id: 'bullets',
+                title: 'Punkt',
+            },
+        ];
 
         $scope.moveContentSegmentUpwards = moveContentSegmentUpwards;
         $scope.moveContentSegmentDownwards = moveContentSegmentDownwards;
         $scope.removeContentSegment = removeContentSegment;
         $scope.addContentSegment = addContentSegment;
+        $scope.addLineToListContentSegment = addLineToListContentSegment;
+        $scope.removeContentSegmentListLine = removeContentSegmentListLine;
         $scope.savePage = savePage;
     }
 
@@ -48,6 +60,14 @@ app.controller('EditPageController', function($scope, $q, $state, $stateParams, 
                     type: contentSegmentType,
                 });
             });
+    }
+
+    function addLineToListContentSegment(contentSegment){
+        contentSegment.lines.push('');
+    }
+
+    function removeContentSegmentListLine(contentSegment, removedLineIndex){
+        contentSegment.lines.splice(removedLineIndex, 1);
     }
 
     function savePage(){
