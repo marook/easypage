@@ -69,10 +69,17 @@ app.factory('Server', function($timeout){
             return `${pageTitle}.json`;
         }, 700);
     }
+
+    function updatePage(pageId, page){
+        // TODO implement me
+        return $timeout(function(){
+        }, 700);
+    }
     
     return {
         getSite,
         getPage,
         addPage,
+        updatePage,
     };
 });

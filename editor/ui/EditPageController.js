@@ -80,7 +80,7 @@ app.controller('EditPageController', function($scope, $q, $state, $stateParams, 
         return $q.when()
             .then(function(){
                 if(!$scope.pageLoading){
-                    // TODO save
+                    return Server.updatePage($stateParams.pageId, $scope.page);
                 }
             })
             .then(function(){
