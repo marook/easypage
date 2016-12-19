@@ -1,39 +1,20 @@
-app.controller('EditPageController', function($scope, $q, $stateParams, $uibModal, CONTENT_SEGMENT_TYPE_TITLES){
+app.controller('EditPageController', function($scope, $q, $state, $stateParams, $uibModal, CONTENT_SEGMENT_TYPE_TITLES, Server, ErrorHandler){
     function main(){
         initScope();
+        fetchPage();
     }
 
     function initScope(){
-        // TODO load from server with $stateParams.pageId
         $scope.CONTENT_SEGMENT_TYPE_TITLES = CONTENT_SEGMENT_TYPE_TITLES;
-        $scope.page = {
-            title: 'Meine Seite',
-            content: [
-                {
-                    "type": "headline",
-                    "text": "Overview"
-                },
-                {
-                    "type": "paragraph",
-                    "text": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
-                },
-                {
-                    "type": "image",
-                    "src": "view.jpg",
-                    "title": "You see some grass."
-                },
-                {
-                    "type": "image",
-                    "src": "tree.jpg",
-                    "title": "You see a tree."
-                }
-            ]
-        };
+        $scope.pageLoading = false;
+        $scope.pageSaving = false;
+        $scope.page = null;
 
         $scope.moveContentSegmentUpwards = moveContentSegmentUpwards;
         $scope.moveContentSegmentDownwards = moveContentSegmentDownwards;
         $scope.removeContentSegment = removeContentSegment;
         $scope.addContentSegment = addContentSegment;
+        $scope.savePage = savePage;
     }
 
     function moveContentSegmentUpwards(contentSegmentIndex){
@@ -66,6 +47,38 @@ app.controller('EditPageController', function($scope, $q, $stateParams, $uibModa
                 $scope.page.content.push({
                     type: contentSegmentType,
                 });
+            });
+    }
+
+    function savePage(){
+        $scope.pageSaving = true;
+        return $q.when()
+            .then(function(){
+                if(!$scope.pageLoading){
+                    // TODO save
+                }
+            })
+            .then(function(){
+                return $state.go('site');
+            })
+            .catch(ErrorHandler.handleError)
+            .finally(function(){
+                $scope.pageSaving = false;
+            });
+    }
+
+    function fetchPage(){
+        $scope.pageLoading = true;
+        return $q.when()
+            .then(function(){
+                return Server.getPage($stateParams.pageId);
+            })
+            .then(function(page){
+                $scope.page = page;
+            })
+            .catch(ErrorHandler.handleError)
+            .finally(function(){
+                $scope.pageLoading = false;
             });
     }
 
