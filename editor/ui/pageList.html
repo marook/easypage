@@ -1,6 +1,6 @@
 <ul class="list-group">
   <div class="btn-group">
-    <button class="btn btn-default" ng-click="addPage()" title="Neue Seite anlegen...">
+    <button class="btn btn-default" ng-click="addPage()" title="Neue Seite anlegen..." ng-disabled="disabled">
       <span class="glyphicon glyphicon-plus"></span>
     </button>
   </div>
@@ -8,10 +8,10 @@
     {{page.title}}
     <div class="pull-right">
       <div class="btn-group">
-        <button class="btn btn-xs btn-primary" ng-click="editPage({pageIndex: $index, page: page})" title="Seite bearbeiten...">
+        <button class="btn btn-xs btn-primary" ng-click="editPage({pageIndex: $index, page: page})" title="Seite bearbeiten..." ng-disabled="disabled">
           <span class="glyphicon glyphicon-pencil"></span>
         </button>
-        <button class="btn btn-xs btn-danger" ng-click="removePage({pageIndex: $index, page: page})" title="Seite löschen">
+        <button class="btn btn-xs btn-danger" ng-click="removePage({pageIndex: $index, page: page})" title="Seite löschen" ng-disabled="disabled">
           <span class="glyphicon glyphicon-remove"></span>
         </button>
       </div>

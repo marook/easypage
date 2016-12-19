@@ -6,13 +6,27 @@ app.controller('SiteController', function($scope, $uibModal, $state, $q, Server,
 
     function initScope(){
         $scope.siteLoading = false;
+        $scope.publishingSite = false;
         $scope.site = null;
         
+        $scope.publishSite = publishSite;
         $scope.addPage = addPage;
         $scope.editPage = editPage;
         $scope.removePage = removePage;
         $scope.addArticle = addArticle;
         $scope.addFooter = addFooter;
+    }
+
+    function publishSite(){
+        $scope.publishingSite = true;
+        return $q.when()
+            .then(function(){
+                return Server.publishSite();
+            })
+            .catch(ErrorHandler.handleError)
+            .finally(function(){
+                $scope.publishingSite = false;
+            });
     }
 
     function addPage(){
@@ -47,8 +61,27 @@ app.controller('SiteController', function($scope, $uibModal, $state, $q, Server,
             });
     }
 
-    function removePage(){
-        // TODO
+    function removePage(pages, pageIndex){
+        const page = pages[pageIndex];
+        return $q.when()
+            .then(function(){
+                return $uibModal.open({
+                    templateUrl: 'removePageConfirmation.html',
+                    controller: 'RemovePageConfirmationController',
+                    resolve: {
+                        modalParams: {
+                            page,
+                        },
+                    },
+                }).result;
+            })
+            .then(function(){
+                return Server.removePage(page.id);
+            })
+            .then(function(){
+                pages.splice(pageIndex, 1);
+            })
+            .catch(ErrorHandler.handleError);
     }
 
     function addArticle(){

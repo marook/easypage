@@ -1,0 +1,18 @@
+<form novalidate ng-submit="removePage()" class="epe-remove-page-confirmation">
+  <div class="modal-header">
+    <h4>Seite löschen</h4>
+  </div>
+  <div class="modal-body">
+    Soll die Seite <span class="epe-removed-page-title">{{page.title}}</span> gelöscht werden?
+  </div>
+  <div class="modal-footer">
+    <div class="pull-right">
+      <button type="submit" class="btn btn-danger">
+        Löschen
+      </button>
+      <button type="button" class="btn btn-default" ng-click="cancel()">
+        Abbrechen
+      </button>
+    </div>
+  </div>
+</form>

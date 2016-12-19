@@ -27,6 +27,12 @@ app.factory('Server', function($timeout){
         }, 700);
     }
 
+    function publishSite(){
+        // TODO implement me
+        return $timeout(function(){
+        }, 700);
+    }
+
     function getPage(pageId){
         // TODO implement me
         return $timeout(function(){
@@ -75,11 +81,20 @@ app.factory('Server', function($timeout){
         return $timeout(function(){
         }, 700);
     }
+
+    function removePage(pageId){
+        // TODO implement me
+        return $timeout(function(){
+        }, 700);
+    }
     
     return {
         getSite,
+        publishSite,
+
         getPage,
         addPage,
         updatePage,
+        removePage,
     };
 });

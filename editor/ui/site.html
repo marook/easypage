@@ -2,21 +2,31 @@
 <div ng-hide="siteLoading">
   <h1>{{site.title}}</h1>
 
+  <button type="button" class="btn btn-primary" ng-click="publishSite()" ng-disabled="publishingSite">
+    Veröffentlichen
+  </button>
+
   <h2>Seiten</h2>
   <page-list
      data-pages="site.pages"
      data-add-page="addPage()"
-     data-edit-page="editPage(page)"></page-list>
+     data-edit-page="editPage(page)"
+     data-remove-page="removePage(site.pages, pageIndex)"
+     data-disabled="publishingSite"></page-list>
 
   <h2>Artikel</h2>
   <page-list
      data-pages="site.articles"
      data-add-page="addArticle()"
-     data-edit-page="editPage(page)"></page-list>
+     data-edit-page="editPage(page)"
+     data-remove-page="removePage(site.articles, pageIndex)"
+     data-disabled="publishingSite"></page-list>
 
   <h2>Footer</h2>
   <page-list
      data-pages="site.footer"
      data-add-page="addFooter()"
-     data-edit-page="editPage(page)"></page-list>
+     data-edit-page="editPage(page)"
+     data-remove-page="removePage(site.footer, pageIndex)"
+     data-disabled="publishingSite"></page-list>
 </div>

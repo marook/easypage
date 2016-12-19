@@ -30,6 +30,8 @@ app.directive('pageList', function(){
              * - page: The page which should be removed.
              */
             removePage: '&',
+
+            disabled: '<',
         },
     };
 });
