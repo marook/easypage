@@ -11,6 +11,10 @@ app.controller('EditPageController', function($scope, $q, $state, $stateParams, 
         $scope.page = null;
         $scope.listStyles = [
             {
+                id: undefined,
+                title: "<standard>",
+            },
+            {
                 id: 'none',
                 title: 'keine',
             },
@@ -27,6 +31,7 @@ app.controller('EditPageController', function($scope, $q, $state, $stateParams, 
         $scope.addLineToListContentSegment = addLineToListContentSegment;
         $scope.removeContentSegmentListLine = removeContentSegmentListLine;
         $scope.savePage = savePage;
+        $scope.cancel = cancel;
     }
 
     function moveContentSegmentUpwards(contentSegmentIndex){
@@ -85,6 +90,10 @@ app.controller('EditPageController', function($scope, $q, $state, $stateParams, 
             .finally(function(){
                 $scope.pageSaving = false;
             });
+    }
+
+    function cancel(){
+        $state.go('site');
     }
 
     function fetchPage(){

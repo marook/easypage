@@ -27,7 +27,7 @@
       <div ng-switch-when="list">
         <div class="form-group">
           <label>Formatierung Aufzählungszeichen</label>
-          <select class="form-control" ng-model="contentItem.style" ng-disabled="pageSaving" ng-options="s.id as s.title for s in listStyles track by s.id"></select>
+          <select class="form-control" ng-model="contentItem.style" ng-disabled="pageSaving" ng-options="s.id as s.title for s in listStyles"></select>
         </div>
         <div class="form-group">
           <label>Elemente der Aufzählung</label>
@@ -41,7 +41,7 @@
               <div class="col-md-1">
                 <div class="pull-right">
                   <button type="button" class="btn btn-xs btn-danger" ng-click="removeContentSegmentListLine(contentItem, $index)" ng-disabled="pageSaving" title="Zeile aus der Aufzählung entfernen">
-                    <span class="glyphicon glyphicon-minus"></span>
+                    <span class="glyphicon glyphicon-remove"></span>
                   </button>
                 </div>
               </div>
@@ -60,7 +60,7 @@
     </div>
   </div>
 
-  <button type="button" class="btn btn-primary" title="Komponente hinzufÃ¼gen..." ng-click="addContentSegment()" ng-disabled="pageLoading || pageSaving">
+  <button type="button" class="btn btn-primary" title="Komponente hinzufügen..." ng-click="addContentSegment()" ng-disabled="pageLoading || pageSaving">
     <span class="glyphicon glyphicon-plus"></span>
   </button>
 
@@ -68,8 +68,11 @@
     <button type="submit" class="btn btn-primary" ng-disabled="pageLoading || pageSaving">
       Speichern
     </button>
-    <button type="button" class="btn btn-default" ng-disabled="pageSaving">
+    <button type="button" class="btn btn-default" ng-disabled="pageSaving" ng-click="cancel()">
       Abbrechen
     </button>
+  </div>
+  <div>
+    <pre>{{page | json}}</pre>
   </div>
 </form>
