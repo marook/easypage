@@ -56,6 +56,10 @@ Site.prototype.getSiteJson = function(){
         });
 };
 
+Site.prototype.getPage = function(pagePath){
+    return this.loadPageDescription(pagePath);
+};
+
 Site.prototype.getPageMetadata = function(pagePath){
     const site = this;
     if(site.pageMetadataCache.has(pagePath)){
@@ -83,7 +87,6 @@ Site.prototype.loadPageDescription = function(pagePath){
         })
         .then(function(siteDescription){
             pageFullPath = path.join(siteDescription.basePath, pagePath);
-            console.log('>>>', pageFullPath);
             return fs.read(pageFullPath);
         })
         .then(function(pageDescriptionBuffer){

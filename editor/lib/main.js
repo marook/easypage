@@ -11,6 +11,7 @@ function main(){
 
     const handlers = [
         ['get', '/site', handleGetSite],
+        ['get', '/page/:pageId', handleGetPage],
     ];
     for(let [method, path, handler] of handlers){
         app[method](path, function(req, res){
@@ -37,10 +38,11 @@ function main(){
 }
 
 function handleGetSite(req, res){
-    return q.when()
-        .then(function(){
-            return site.getSiteJson();
-        });
+    return site.getSiteJson();
+}
+
+function handleGetPage(req, res){
+    return site.getPage(req.params.pageId);
 }
 
 main();
