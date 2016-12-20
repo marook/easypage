@@ -1,14 +1,9 @@
 <ul class="list-group">
-  <div class="btn-group">
-    <button class="btn btn-default" ng-click="addPage()" title="Neue Seite anlegen..." ng-disabled="disabled">
-      <span class="glyphicon glyphicon-plus"></span>
-    </button>
-  </div>
   <li ng-repeat="page in pages" class="list-group-item">
     {{page.title}}
     <div class="pull-right">
       <div class="btn-group">
-        <button class="btn btn-xs btn-primary" ng-click="editPage({pageIndex: $index, page: page})" title="Seite bearbeiten..." ng-disabled="disabled">
+        <button class="btn btn-xs btn-default" ng-click="editPage({pageIndex: $index, page: page})" title="Seite bearbeiten..." ng-disabled="disabled">
           <span class="glyphicon glyphicon-pencil"></span>
         </button>
         <button class="btn btn-xs btn-danger" ng-click="removePage({pageIndex: $index, page: page})" title="Seite löschen" ng-disabled="disabled">
@@ -17,4 +12,9 @@
       </div>
     </div>
   </li>
+  <div class="btn-group">
+    <button class="btn btn-default" ng-click="addPage()" title="Neue Seite anlegen..." ng-disabled="disabled">
+      <span class="glyphicon glyphicon-plus"></span>
+    </button>
+  </div>
 </ul>
