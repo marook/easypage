@@ -47,8 +47,19 @@ gulp.task('fonts-to-www', function(){
 
 gulp.task('connect', function(){
     const connect = require('gulp-connect');
+    const proxy = require('http-proxy-middleware');
     connect.server({
         port: 9001,
         root: 'www',
+        middleware: function(connect, opt){
+            return [
+                proxy('/api', {
+                    target: 'http://localhost:9002',
+                    pathRewrite: {
+                        '^/api': '',
+                    },
+                }),
+            ];
+        },
     });
 });

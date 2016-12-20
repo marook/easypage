@@ -23,7 +23,8 @@
         "yargs": "6.5.0"
     },
     "devDependencies": {
-        "gulp-connect": "5.0.0"
+        "gulp-connect": "5.0.0",
+        "http-proxy-middleware": "0.17.3"
     },
     "scripts": {
         "postinstall": "./node_modules/.bin/gulp"

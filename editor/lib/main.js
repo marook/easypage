@@ -1,6 +1,10 @@
 const argv = require('yargs').argv;
 const express = require('express');
+const path = require('path');
 const q = require('q');
+const sites = require('./sites');
+
+const site = new sites.Site(argv.site);
 
 function main(){
     const app = express();
@@ -33,7 +37,10 @@ function main(){
 }
 
 function handleGetSite(req, res){
-    // TODO
+    return q.when()
+        .then(function(){
+            return site.getSiteJson();
+        });
 }
 
 main();

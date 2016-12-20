@@ -1,30 +1,13 @@
-app.factory('Server', function($timeout){
+app.factory('Server', function($timeout, $http){
 
     function getSite(){
-        // TODO implement me
-        return $timeout(function(){
-            return {
-                title: 'Demo Seite',
-                pages: [
-                    {
-                        id: 's1.json',
-                        title: 'Seite 1',
-                    },
-                ],
-                articles: [
-                    {
-                        id: 'a1.json',
-                        title: 'Artikel 1',
-                    },
-                ],
-                footer: [
-                    {
-                        id: 'f1.json',
-                        title: 'Footer 1',
-                    },
-                ],
-            };
-        }, 700);
+        return $http({
+            method: 'GET',
+            url: '/api/site'
+        })
+            .then(function(response){
+                return response.data;
+            });
     }
 
     function publishSite(){
