@@ -23,6 +23,21 @@ Site.prototype.loadSiteDescription = function(){
         });
 };
 
+Site.prototype.saveSiteDescription = function(siteDescription){
+    const site = this;
+    return q.when()
+        .then(function(){
+            const persistedSiteDescription = {};
+            for(let property of ['title', 'pages', 'articles', 'footer']){
+                persistedSiteDescription[property] = siteDescription[property];
+            }
+            return fs.write(site.sitePath, JSON.stringify(persistedSiteDescription));
+        })
+        .then(function(){
+            site.siteDescription = q.when(siteDescription);
+        });
+};
+
 Site.prototype.getSiteJson = function(){
     const site = this;
     let siteJson;
@@ -83,10 +98,10 @@ Site.prototype.loadPageDescription = function(pagePath){
     let pageFullPath;
     return q.when()
         .then(function(){
-            return site.siteDescription;
+            return site.getPageFullPath(pagePath);
         })
-        .then(function(siteDescription){
-            pageFullPath = path.join(siteDescription.basePath, pagePath);
+        .then(function(_pageFullPath_){
+            pageFullPath = _pageFullPath_;
             return fs.read(pageFullPath);
         })
         .then(function(pageDescriptionBuffer){
@@ -97,6 +112,37 @@ Site.prototype.loadPageDescription = function(pagePath){
             return pageDescription;
         });
 }
+
+Site.prototype.deletePage = function(pagePath){
+    const site = this;
+    return q.when()
+        .then(function(){
+            return site.getPageFullPath(pagePath);
+        })
+        .then(function(pageFullPath){
+            return fs.remove(pageFullPath);
+        })
+        .then(function(){
+            return site.siteDescription;
+        })
+        .then(function(siteDescription){
+            siteDescription.pages = siteDescription.pages.filter(p => p !== pagePath);
+            siteDescription.articles = siteDescription.articles.filter(p => p !== pagePath);
+            siteDescription.footer = siteDescription.footer.filter(p => p !== pagePath);
+            return site.saveSiteDescription(siteDescription);
+        });
+};
+
+Site.prototype.getPageFullPath = function(pagePath){
+    const site = this;
+    return q.when()
+        .then(function(){
+            return site.siteDescription;
+        })
+        .then(function(siteDescription){
+            return path.join(siteDescription.basePath, pagePath);
+        });
+};
 
 module.exports = {
     Site,

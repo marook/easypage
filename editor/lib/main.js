@@ -12,6 +12,7 @@ function main(){
     const handlers = [
         ['get', '/site', handleGetSite],
         ['get', '/page/:pageId', handleGetPage],
+        ['delete', '/page/:pageId', handleDeletePage],
     ];
     for(let [method, path, handler] of handlers){
         app[method](path, function(req, res){
@@ -43,6 +44,10 @@ function handleGetSite(req, res){
 
 function handleGetPage(req, res){
     return site.getPage(req.params.pageId);
+}
+
+function handleDeletePage(req, res){
+    return site.deletePage(req.params.pageId);
 }
 
 main();

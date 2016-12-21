@@ -31,18 +31,23 @@ app.controller('SiteController', function($scope, $uibModal, $state, $q, Server,
     }
 
     function addPage(){
-        return openAddPageModal('')
+        return editNewPage('page');
+    }
+
+    function editNewPage(pageCategory){
+        return openAddPageModal(pageCategory, '')
             .then(function(pageId){
                 return gotoEditPage(pageId);
             });
     }
 
-    function openAddPageModal(pageTitle){
+    function openAddPageModal(pageCategory, pageTitle){
         return $uibModal.open({
             templateUrl: 'addPage.html',
             controller: 'AddPageController',
             resolve: {
                 modalParams: {
+                    pageCategory,
                     pageTitle,
                 },
             },
@@ -86,13 +91,11 @@ app.controller('SiteController', function($scope, $uibModal, $state, $q, Server,
     }
 
     function addArticle(){
-        alert('add article');
-        // TODO
+        return editNewPage('article');
     }
 
     function addFooter(){
-        alert('add footer');
-        // TODO
+        return editNewPage('footer');
     }
 
     function fetchSite(){

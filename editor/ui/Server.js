@@ -33,6 +33,20 @@ app.factory('Server', function($timeout, $http){
         }, 700);
     }
 
+    function addArticle(pageTitle){
+        // TODO implement me
+        return $timeout(function(){
+            return `${pageTitle}.json`;
+        }, 700);
+    }
+
+    function addFooter(pageTitle){
+        // TODO implement me
+        return $timeout(function(){
+            return `${pageTitle}.json`;
+        }, 700);
+    }
+
     function updatePage(pageId, page){
         // TODO implement me
         return $timeout(function(){
@@ -40,9 +54,13 @@ app.factory('Server', function($timeout, $http){
     }
 
     function removePage(pageId){
-        // TODO implement me
-        return $timeout(function(){
-        }, 700);
+        return $http({
+            method: 'DELETE',
+            url: `/api/page/${pageId}`,
+        })
+            .then(function(response){
+                return response.data;
+            });
     }
     
     return {
@@ -51,6 +69,8 @@ app.factory('Server', function($timeout, $http){
 
         getPage,
         addPage,
+        addArticle,
+        addFooter,
         updatePage,
         removePage,
     };
