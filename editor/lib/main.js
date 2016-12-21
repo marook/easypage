@@ -1,4 +1,5 @@
 const argv = require('yargs').argv;
+const bodyParser = require('body-parser');
 const express = require('express');
 const path = require('path');
 const q = require('q');
@@ -8,11 +9,13 @@ const site = new sites.Site(argv.site);
 
 function main(){
     const app = express();
+    app.use(bodyParser.json());
 
     const handlers = [
         ['get', '/site', handleGetSite],
         ['get', '/page/:pageId', handleGetPage],
         ['delete', '/page/:pageId', handleDeletePage],
+        ['post', '/site/:pageCategory', handleAddPage],
     ];
     for(let [method, path, handler] of handlers){
         app[method](path, function(req, res){
@@ -21,7 +24,7 @@ function main(){
                     return handler(req, res);
                 })
                 .then(function(responseData){
-                    res.send(responseData);
+                    res.json(responseData);
                 })
                 .catch(function(e){
                     const httpStatusCode = (e && e.httpStatusCode) || 500;
@@ -48,6 +51,10 @@ function handleGetPage(req, res){
 
 function handleDeletePage(req, res){
     return site.deletePage(req.params.pageId);
+}
+
+function handleAddPage(req, res){
+    return site.addPage(req.params.pageCategory, req.body);
 }
 
 main();

@@ -5,6 +5,7 @@ const q = require('q');
 function Site(sitePath){
     this.sitePath = sitePath;
     this.pageMetadataCache = new Map();
+    this.nextPageNumber = 0;
     this.siteDescription = this.loadSiteDescription();
 }
 
@@ -31,6 +32,7 @@ Site.prototype.saveSiteDescription = function(siteDescription){
             for(let property of ['title', 'pages', 'articles', 'footer']){
                 persistedSiteDescription[property] = siteDescription[property];
             }
+            persistedSiteDescription.lastModified = '' + new Date();
             return fs.write(site.sitePath, JSON.stringify(persistedSiteDescription));
         })
         .then(function(){
@@ -67,7 +69,7 @@ Site.prototype.getSiteJson = function(){
             }
         })
         .then(function(){
-            return JSON.stringify(siteJson);
+            return siteJson;
         });
 };
 
@@ -113,6 +115,32 @@ Site.prototype.loadPageDescription = function(pagePath){
         });
 }
 
+const PAGE_DESCRIPTION_DEFAULT_PROPERTIES = {
+    title: '',
+    content: [],
+};
+
+Site.prototype.savePageDescription = function(pagePath, pageDescription){
+    const site = this;
+    return q.when()
+        .then(function(){
+            return site.getPageFullPath(pagePath);
+        })
+        .then(function(pageFullPath){
+            for(let key in PAGE_DESCRIPTION_DEFAULT_PROPERTIES){
+                if(!PAGE_DESCRIPTION_DEFAULT_PROPERTIES.hasOwnProperty(key)){
+                    continue;
+                }
+                if(pageDescription.hasOwnProperty(key)){
+                    continue
+                }
+                pageDescription[key] = PAGE_DESCRIPTION_DEFAULT_PROPERTIES[key];
+            }
+            pageDescription.lastModified = '' + new Date();
+            return fs.write(pageFullPath, JSON.stringify(pageDescription));
+        });
+};
+
 Site.prototype.deletePage = function(pagePath){
     const site = this;
     return q.when()
@@ -126,10 +154,69 @@ Site.prototype.deletePage = function(pagePath){
             return site.siteDescription;
         })
         .then(function(siteDescription){
+            site.pageMetadataCache.delete(pagePath);
             siteDescription.pages = siteDescription.pages.filter(p => p !== pagePath);
             siteDescription.articles = siteDescription.articles.filter(p => p !== pagePath);
             siteDescription.footer = siteDescription.footer.filter(p => p !== pagePath);
             return site.saveSiteDescription(siteDescription);
+        });
+};
+
+const PAGE_CATEGORIES = new Set([
+    'pages',
+    'articles',
+    'footer',
+]);
+
+Site.prototype.addPage = function(pageCategory, pageDescription){
+    const site = this;
+    let pagePath;
+    return q.when()
+        .then(function(){
+            if(!PAGE_CATEGORIES.has(pageCategory)){
+                return q.reject(new Error(`Unknown pageCategory: ${pageCategory}`));
+            }
+            return site.nextPagePath();
+        })
+        .then(function(_pagePath_){
+            pagePath = _pagePath_;
+            return q.all([
+                site.addPagePathToSite(pageCategory, pagePath),
+                site.savePageDescription(pagePath, pageDescription),
+            ]);
+        })
+        .then(function(){
+            return pagePath;
+        });
+};
+
+Site.prototype.addPagePathToSite = function(pageCategory, pagePath){
+    const site = this;
+    return q.when()
+        .then(function(){
+            return site.siteDescription;
+        })
+        .then(function(siteDescription){
+            siteDescription[pageCategory].push(pagePath);
+            return site.saveSiteDescription(siteDescription);
+        });
+};
+
+Site.prototype.nextPagePath = function(){
+    const site = this;
+    return q.when()
+        .then(function(){
+            return site.siteDescription;
+        })
+        .then(function(siteDescription){
+            const existingPagePaths = new Set(siteDescription.pages.concat(siteDescription.articles, siteDescription.footer));
+            while(true){
+                const nextPagePath = `page-${site.nextPageNumber}.json`;
+                if(!existingPagePaths.has(nextPagePath)){
+                    return nextPagePath;
+                }
+                site.nextPageNumber += 1;
+            }
         });
 };
 

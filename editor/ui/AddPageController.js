@@ -1,4 +1,4 @@
-app.controller('AddPageController', function($scope, modalParams, $uibModalInstance, Server, $q, ErrorHandler){
+app.controller('AddPageController', function($scope, modalParams, $uibModalInstance, Server, $q, ErrorHandler, StringUtils){
     function main(){
         initScope();
     }
@@ -15,7 +15,8 @@ app.controller('AddPageController', function($scope, modalParams, $uibModalInsta
         $scope.creatingPage = true;
         return $q.when()
             .then(function(){
-                return Server.addPage($scope.pageTitle);
+                const addFunctionName = `add${StringUtils.toFirstUpper(modalParams.pageCategory)}`;
+                return Server[addFunctionName]($scope.pageTitle);
             })
             .then(function(pageId){
                 return $uibModalInstance.close(pageId);

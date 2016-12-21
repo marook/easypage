@@ -27,24 +27,28 @@ app.factory('Server', function($timeout, $http){
     }
 
     function addPage(pageTitle){
-        // TODO implement me
-        return $timeout(function(){
-            return `${pageTitle}.json`;
-        }, 700);
+        return addPageToSite('pages', pageTitle);
     }
 
     function addArticle(pageTitle){
-        // TODO implement me
-        return $timeout(function(){
-            return `${pageTitle}.json`;
-        }, 700);
+        return addPageToSite('articles', pageTitle);
     }
 
     function addFooter(pageTitle){
-        // TODO implement me
-        return $timeout(function(){
-            return `${pageTitle}.json`;
-        }, 700);
+        return addPageToSite('footer', pageTitle);
+    }
+
+    function addPageToSite(pageCategory, pageTitle){
+        return $http({
+            method: 'POST',
+            url: `/api/site/${pageCategory}`,
+            data: {
+                title: pageTitle,
+            },
+        })
+            .then(function(response){
+                return response.data;
+            });
     }
 
     function updatePage(pageId, page){
