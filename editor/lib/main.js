@@ -14,6 +14,7 @@ function main(){
     const handlers = [
         ['get', '/site', handleGetSite],
         ['get', '/page/:pageId', handleGetPage],
+        ['put', '/page/:pageId', handlePutPage],
         ['delete', '/page/:pageId', handleDeletePage],
         ['post', '/site/:pageCategory', handleAddPage],
     ];
@@ -47,6 +48,10 @@ function handleGetSite(req, res){
 
 function handleGetPage(req, res){
     return site.getPage(req.params.pageId);
+}
+
+function handlePutPage(req, res){
+    return site.updatePage(req.params.pageId, req.body);
 }
 
 function handleDeletePage(req, res){

@@ -225,6 +225,17 @@ Site.prototype.addPage = function(pageCategory, pageDescription){
         });
 };
 
+Site.prototype.updatePage = function(pagePath, pageDescription){
+    const site = this;
+    return q.when()
+        .then(function(){
+            return site.ensureIsPage(pagePath);
+        })
+        .then(function(){
+            return site.savePageDescription(pagePath, pageDescription);
+        });
+};
+
 Site.prototype.addPagePathToSite = function(pageCategory, pagePath){
     const site = this;
     return q.when()

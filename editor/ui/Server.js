@@ -52,9 +52,14 @@ app.factory('Server', function($timeout, $http){
     }
 
     function updatePage(pageId, page){
-        // TODO implement me
-        return $timeout(function(){
-        }, 700);
+        return $http({
+            method: 'PUT',
+            url: `/api/page/${pageId}`,
+            data: page,
+        })
+            .then(function(response){
+                return response.data;
+            });
     }
 
     function removePage(pageId){
