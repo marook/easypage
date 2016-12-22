@@ -1,10 +1,32 @@
-app.factory('Server', function($timeout, $http){
+app.factory('Server', function($timeout, $http, $q, $state){
+
+    function login(username, password){
+        return $http({
+            method: 'POST',
+            url: '/api/login',
+            data: {
+                username,
+                password,
+            },
+        })
+            .catch(function(response){
+                if(response.status === 401){
+                    return $q.reject('INVALID_LOGIN_CREDENTIALS');
+                } else {
+                    return $q.reject(response);
+                }
+            })
+            .then(function(response){
+                return response.data;
+            });
+    }
 
     function getSite(){
         return $http({
             method: 'GET',
             url: '/api/site'
         })
+            .catch(handleServerErrors)
             .then(function(response){
                 return response.data;
             });
@@ -21,6 +43,7 @@ app.factory('Server', function($timeout, $http){
             method: 'GET',
             url: `/api/page/${pageId}`,
         })
+            .catch(handleServerErrors)
             .then(function(response){
                 return response.data;
             });
@@ -46,6 +69,7 @@ app.factory('Server', function($timeout, $http){
                 title: pageTitle,
             },
         })
+            .catch(handleServerErrors)
             .then(function(response){
                 return response.data;
             });
@@ -57,6 +81,7 @@ app.factory('Server', function($timeout, $http){
             url: `/api/page/${pageId}`,
             data: page,
         })
+            .catch(handleServerErrors)
             .then(function(response){
                 return response.data;
             });
@@ -67,12 +92,24 @@ app.factory('Server', function($timeout, $http){
             method: 'DELETE',
             url: `/api/page/${pageId}`,
         })
+            .catch(handleServerErrors)
             .then(function(response){
                 return response.data;
             });
     }
+
+    function handleServerErrors(response){
+        if(response.status === 401){
+            $state.go('login');
+            return $q.reject('NOT_AUTHORIZED');
+        } else {
+            return $q.reject(response);
+        }
+    }
     
     return {
+        login,
+    
         getSite,
         publishSite,
 

@@ -2,12 +2,13 @@ easypage-editor
 
 1) Starting the Server
 2) Development
+3) Generating User Credentials
 
 
 ------------------------------------------------------------------------
 Starting the Server
 
-$ node . --port 1234 --site path/to/site.json
+$ node . --port 1234 --site path/to/site.json --users path/to/users.json
 
 
 ------------------------------------------------------------------------
@@ -16,3 +17,11 @@ Development
 $ gulp build connect
 
 Launches a webserver on http://localhost:9001
+
+
+------------------------------------------------------------------------
+Generating User Credentials
+
+$ node
+> const crypto = require('crypto')
+> crypto.createHmac('sha512', 'theUsername').update('thePassword').digest('hex')

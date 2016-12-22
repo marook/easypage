@@ -1,0 +1,11 @@
+<form name="loginForm" class="epe-form-signin" novalidate ng-submit="login()">
+  <h2 class="form-signin-heading">Bitte loggen Sie sich ein</h2>
+  <div class="alert alert-danger" ng-if="invalidLoginCredentials">
+    Benutzername und Passwort falsch.
+  </div>
+  <label for="inputUser" class="sr-only">Benutzer</label>
+  <input ng-model="username" name="username" type="text" id="inputUser" class="form-control" placeholder="Benutzer" autofocus>
+  <label for="inputPassword" class="sr-only">Passwort</label>
+  <input ng-model="password" name="password" type="password" id="inputPassword" class="form-control" placeholder="Passwort">
+  <button class="btn btn-lg btn-primary btn-block" type="submit">Anmelden</button>
+</form>
