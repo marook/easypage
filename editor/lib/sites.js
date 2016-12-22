@@ -73,8 +73,37 @@ Site.prototype.getSiteJson = function(){
         });
 };
 
+Site.prototype.ensureIsPage = function(pagePath){
+    const site = this;
+    return q.when()
+        .then(function(){
+            return site.siteDescription;
+        })
+        .then(function(siteDescription){
+            for(let pages of [siteDescription.pages, siteDescription.articles, siteDescription.footer]){
+                for(let page of pages){
+                    if(page === pagePath){
+                        return;
+                    }
+                }
+            }
+            return q.reject(new Error(`Unknown page: ${pagePath}`));
+        });
+};
+
 Site.prototype.getPage = function(pagePath){
-    return this.loadPageDescription(pagePath);
+    const site = this;
+    return q.when()
+        .then(function(){
+            return site.loadPageDescription(pagePath);
+        })
+        .then(function(pageDescription){
+            const pageJson = {};
+            for(let key of ['title', 'content']){
+                pageJson[key] = pageDescription[key];
+            }
+            return pageJson;
+        });
 };
 
 Site.prototype.getPageMetadata = function(pagePath){
@@ -99,6 +128,9 @@ Site.prototype.loadPageDescription = function(pagePath){
     const site = this;
     let pageFullPath;
     return q.when()
+        .then(function(){
+            return site.ensureIsPage(pagePath);
+        })
         .then(function(){
             return site.getPageFullPath(pagePath);
         })
@@ -144,6 +176,9 @@ Site.prototype.savePageDescription = function(pagePath, pageDescription){
 Site.prototype.deletePage = function(pagePath){
     const site = this;
     return q.when()
+        .then(function(){
+            return site.ensureIsPage(pagePath);
+        })
         .then(function(){
             return site.getPageFullPath(pagePath);
         })
