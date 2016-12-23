@@ -1,4 +1,5 @@
 const fs = require('q-io/fs');
+const images = require('./images');
 const path = require('path');
 const q = require('q');
 
@@ -274,6 +275,29 @@ Site.prototype.getPageFullPath = function(pagePath){
         })
         .then(function(siteDescription){
             return path.join(siteDescription.basePath, pagePath);
+        });
+};
+
+Site.prototype.getPreviewImagePath = function(imageFileName){
+    const site = this;
+    let siteDescription, previewImagePath;
+    return q.when()
+        .then(function(){
+            return site.siteDescription;
+        })
+        .then(function(_siteDescription_){
+            siteDescription = _siteDescription_;
+            previewImagePath = path.join(siteDescription.basePath, `${imageFileName}-preview`);
+            return fs.exists(previewImagePath);
+        })
+        .then(function(previewImageExists){
+            if(!previewImageExists){
+                const inputImagePath = path.join(siteDescription.basePath, imageFileName);
+                return images.resizeImage(previewImagePath, inputImagePath, 400, 300);
+            }
+        })
+        .then(function(){
+            return path.resolve(previewImagePath);
         });
 };
 

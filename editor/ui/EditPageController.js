@@ -1,4 +1,4 @@
-app.controller('EditPageController', function($scope, $q, $state, $stateParams, $uibModal, CONTENT_SEGMENT_TYPE_TITLES, Server, ErrorHandler){
+app.controller('EditPageController', function($scope, $q, $state, $stateParams, $uibModal, CONTENT_SEGMENT_TYPE_TITLES, Server, ErrorHandler, FileUploader){
     function main(){
         initScope();
         fetchPage();
@@ -61,10 +61,31 @@ app.controller('EditPageController', function($scope, $q, $state, $stateParams, 
                 }).result;
             })
             .then(function(contentSegmentType){
-                $scope.page.content.push({
+                const contentSegment = {
                     type: contentSegmentType,
-                });
+                };
+                prepareContentSegmentForScope(contentSegment);
+                $scope.page.content.push(contentSegment);
             });
+    }
+
+    function prepareContentSegmentForScope(contentSegment){
+        switch(contentSegment.type){
+        case 'image':
+            contentSegment.imageUploader = buildImageUploader(contentSegment);
+            break;
+        }
+    }
+
+    function buildImageUploader(contentSegment){
+        const uploader = new FileUploader({
+            url: '/api/images',
+        });
+        uploader.autoUpload = true;
+        uploader.onCompleteItem = function(fileItem, response, status, headers){
+            contentSegment.src = response;
+        };
+        return uploader;
     }
 
     function addLineToListContentSegment(contentSegment){
@@ -80,7 +101,7 @@ app.controller('EditPageController', function($scope, $q, $state, $stateParams, 
         return $q.when()
             .then(function(){
                 if(!$scope.pageLoading){
-                    return Server.updatePage($stateParams.pageId, $scope.page);
+                    return Server.updatePage($stateParams.pageId, buildPageDescription());
                 }
             })
             .then(function(){
@@ -90,6 +111,24 @@ app.controller('EditPageController', function($scope, $q, $state, $stateParams, 
             .finally(function(){
                 $scope.pageSaving = false;
             });
+    }
+
+    function buildPageDescription(){
+        const page = $scope.page;
+        return {
+            title: page.title,
+            content: page.content.map(function(cs){
+                switch(cs.type){
+                default:
+                    return cs;
+                case 'image':
+                    return {
+                        type: cs.type,
+                        src: cs.src,
+                    };
+                };
+            }),
+        };
     }
 
     function cancel(){
@@ -103,6 +142,9 @@ app.controller('EditPageController', function($scope, $q, $state, $stateParams, 
                 return Server.getPage($stateParams.pageId);
             })
             .then(function(page){
+                for(let contentSegment of page.content){
+                    prepareContentSegmentForScope(contentSegment);
+                }
                 $scope.page = page;
             })
             .catch(ErrorHandler.handleError)

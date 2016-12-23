@@ -1,4 +1,4 @@
-app.controller('LoginController', function($q, Server, $scope, $state){
+app.controller('LoginController', function($q, Server, $scope, $state, ErrorHandler){
     function main(){
         initScope();
     }

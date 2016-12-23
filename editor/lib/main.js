@@ -5,6 +5,7 @@ const crypto = require('crypto');
 const express = require('express');
 const expressSession = require('express-session');
 const fs = require('q-io/fs');
+const multer = require('multer');
 const passport = require('passport');
 const passportLocal = require('passport-local');
 const path = require('path');
@@ -34,7 +35,6 @@ function main(){
                         done(null, false);
                     })
                     .catch(function(e){
-                        console.log('>>>', e);
                         done(e);
                     });
             }));
@@ -72,24 +72,17 @@ function main(){
                         .then(function(responseData){
                             res.json(responseData);
                         })
-                        .catch(function(e){
-                            const httpStatusCode = (e && e.httpStatusCode) || 500;
-                            if(httpStatusCode === 401){
-                                res.status(401).send('Not authenticated');
-                            } else if(httpStatusCode === 500){
-                                console.error('Server error', e, e.stack);
-                                res.status(500).send('Server error');
-                            } else {
-                                res.status(httpStatusCode).send(e.responseData || '');
-                            }
-                        });
+                        .catch(buildErrorHandler(req, res));
                 });
             }
-
             app.post('/login', passport.authenticate('local'), function(req, res){
                 res.send();
             });
-
+            const fileUpload = multer({
+                dest: path.dirname(argv.site),
+            });
+            app.post('/images', fileUpload.single('file'), handleImageUpload);
+            app.get('/image/:imageFileName/preview', handleImagePreview);
             app.listen(argv.port || 8080);
             console.log('Server is ready');
         });
@@ -150,6 +143,53 @@ function handleDeletePage(req, res){
 
 function handleAddPage(req, res){
     return site.addPage(req.params.pageCategory, req.body);
+}
+
+function handleImageUpload(req, res){
+    q.when()
+        .then(function(){
+            if(!req.user){
+                return q.reject({
+                    httpStatusCode: 401,
+                });
+            }
+        })
+        .then(function(){
+            res.json(req.file.filename);
+        })
+        .catch(buildErrorHandler(req, res));
+}
+
+function handleImagePreview(req, res){
+    q.when()
+        .then(function(){
+            if(!req.user){
+                return q.reject({
+                    httpStatusCode: 401,
+                });
+            }
+        })
+        .then(function(){
+            return site.getPreviewImagePath(req.params.imageFileName);
+        })
+        .then(function(previewImagePath){
+            res.sendFile(previewImagePath);
+        })
+        .catch(buildErrorHandler(req, res));
+}
+
+function buildErrorHandler(req, res){
+    return function(e){
+        const httpStatusCode = (e && e.httpStatusCode) || 500;
+        if(httpStatusCode === 401){
+            res.status(401).send('Not authenticated');
+        } else if(httpStatusCode === 500){
+            console.error('Server error', e, e.stack);
+            res.status(500).send('Server error');
+        } else {
+            res.status(httpStatusCode).send(e.responseData || '');
+        }
+    };
 }
 
 main();
