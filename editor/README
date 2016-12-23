@@ -14,9 +14,12 @@ $ node . --port 1234 --site path/to/site.json --users path/to/users.json
 ------------------------------------------------------------------------
 Development
 
+You have to start the node server and gulp server in parallel.
+$ node . --port 9002 --site ../demos/site.json --users ../demos/user.json
 $ gulp build connect
 
-Launches a webserver on http://localhost:9001
+Launch a webserver on http://localhost:9001 and login with user demo and
+password demo.
 
 
 ------------------------------------------------------------------------
