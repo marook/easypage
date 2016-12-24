@@ -161,7 +161,7 @@ Site.prototype.savePageDescription = function(pagePath, pageDescription, _former
         .then(function(){
             return q.all([
                 site.getPageFullPath(pagePath),
-                _formerPageDescription_ ? q.when(_formerPageDescription_) : site.getPage(pagePath),
+                _formerPageDescription_ ? q.when(_formerPageDescription_) : site.loadPageDescription(pagePath),
             ]);
         })
         .then(function(args){
@@ -179,9 +179,9 @@ Site.prototype.savePageDescription = function(pagePath, pageDescription, _former
                 if(formerPageDescription.hasOwnProperty(key)){
                     continue
                 }
-                fomerPageDescription[key] = PAGE_DESCRIPTION_DEFAULT_PROPERTIES[key];
+                formerPageDescription[key] = PAGE_DESCRIPTION_DEFAULT_PROPERTIES[key];
             }
-            fomerPageDescription.lastModified = '' + new Date();
+            formerPageDescription.lastModified = '' + new Date();
             return fs.write(pageFullPath, JSON.stringify(formerPageDescription));
         });
 };
