@@ -317,7 +317,12 @@ Renderer.prototype._renderPageContentSegmentList = function _renderPageContentSe
 };
 
 Renderer.prototype._renderPageContentSegmentParagraph = function _renderPageContentSegmentParagraph(outputDirPath, pageDefinition, content){
-    return `<p class="ep-paragraph">${escapeHtml(content.text)}</p>`;
+    const lines = content.text
+          .trim()
+          .split('\n')
+          .map(l => escapeHtml(l.trim()))
+          .join('<br/>');
+    return `<p class="ep-paragraph">${lines}</p>`;
 };
 
 Renderer.prototype.renderFooter = function renderFooter(outputDirPath, pageDefinition){
