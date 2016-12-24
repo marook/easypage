@@ -7,6 +7,7 @@ app.controller('SiteController', function($scope, $uibModal, $state, $q, Server,
     function initScope(){
         $scope.siteLoading = false;
         $scope.publishingSite = false;
+        $scope.updatingSite = false;
         $scope.site = null;
         
         $scope.publishSite = publishSite;
@@ -103,10 +104,39 @@ app.controller('SiteController', function($scope, $uibModal, $state, $q, Server,
         return Server.getSite()
             .then(function(site){
                 $scope.site = site;
+                watchPagesForOrderChanges();
             })
             .catch(ErrorHandler.handleError)
             .finally(function(){
                 $scope.siteLoading = false;
+            });
+    }
+
+    function watchPagesForOrderChanges(){
+        let firstCall = true;
+        $scope.$watchCollection('site.pages', function(){
+            if(firstCall){
+                firstCall = false;
+                return;
+            }
+            savePageOrder();
+        });
+    }
+
+    function savePageOrder(){
+        $scope.updatingSite = true;
+        return $q.when()
+            .then(function(){
+                const site = {
+                    pages: $scope.site.pages.map(p => p.id),
+                    articles: $scope.site.articles.map(a => a.id),
+                    footer: $scope.site.footer.map(f => f.id),
+                };
+                return Server.updateSite(site);
+            })
+            .catch(ErrorHandler.handleError)
+            .finally(function(){
+                $scope.updatingSite = false;
             });
     }
 

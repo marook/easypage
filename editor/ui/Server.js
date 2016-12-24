@@ -38,6 +38,18 @@ app.factory('Server', function($timeout, $http, $q, $state){
             });
     }
 
+    function updateSite(siteDescription){
+        return $http({
+            method: 'PUT',
+            url: '/api/site',
+            data: siteDescription,
+        })
+            .catch(handleServerErrors)
+                .then(function(resonse){
+                    return resonse.data;
+                });
+    }
+
     function publishSite(){
         // TODO implement me
         return $timeout(function(){
@@ -117,6 +129,7 @@ app.factory('Server', function($timeout, $http, $q, $state){
         login,
     
         getSite,
+        updateSite,
         publishSite,
 
         getPage,

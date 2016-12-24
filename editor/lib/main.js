@@ -53,6 +53,7 @@ function main(){
         .then(function(app){
             const handlers = [
                 ['get', '/site', handleGetSite],
+                ['put', '/site', handlePutSite],
                 ['get', '/page/:pageId', handleGetPage],
                 ['put', '/page/:pageId', handlePutPage],
                 ['delete', '/page/:pageId', handleDeletePage],
@@ -127,6 +128,10 @@ function createExpressApp(){
 
 function handleGetSite(req, res){
     return site.getSiteJson();
+}
+
+function handlePutSite(req, res){
+    return site.updateSite(req.body);
 }
 
 function handleGetPage(req, res){

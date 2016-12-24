@@ -12,7 +12,7 @@
      data-add-page="addPage()"
      data-edit-page="editPage(page)"
      data-remove-page="removePage(site.pages, pageIndex)"
-     data-disabled="publishingSite"></page-list>
+     data-disabled="publishingSite || updatingSite"></page-list>
 
   <h2>Artikel</h2>
   <page-list
@@ -20,7 +20,7 @@
      data-add-page="addArticle()"
      data-edit-page="editPage(page)"
      data-remove-page="removePage(site.articles, pageIndex)"
-     data-disabled="publishingSite"
+     data-disabled="publishingSite || updatingSite"
      data-show-first-published="true"></page-list>
 
   <h2>Footer</h2>
@@ -29,5 +29,5 @@
      data-add-page="addFooter()"
      data-edit-page="editPage(page)"
      data-remove-page="removePage(site.footer, pageIndex)"
-     data-disabled="publishingSite"></page-list>
+     data-disabled="publishingSite || updatingSite"></page-list>
 </div>

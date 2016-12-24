@@ -27,19 +27,24 @@ Site.prototype.loadSiteDescription = function(){
 
 Site.prototype.saveSiteDescription = function(siteDescription){
     const site = this;
+    let formerSiteDescription;
     return q.when()
         .then(function(){
             return site.siteDescription;
         })
-        .then(function(formerSiteDescription){
+        .then(function(_formerSiteDescription_){
+            formerSiteDescription = _formerSiteDescription_;
             for(let property of ['title', 'pages', 'articles', 'footer']){
+                if(!siteDescription.hasOwnProperty(property)){
+                    continue;
+                }
                 formerSiteDescription[property] = siteDescription[property];
             }
             formerSiteDescription.lastModified = '' + new Date();
             return fs.write(site.sitePath, JSON.stringify(formerSiteDescription));
         })
         .then(function(){
-            site.siteDescription = q.when(siteDescription);
+            site.siteDescription = q.when(formerSiteDescription);
         });
 };
 
@@ -74,6 +79,29 @@ Site.prototype.getSiteJson = function(){
         })
         .then(function(){
             return siteJson;
+        });
+};
+
+Site.prototype.updateSite = function(newSiteDescription){
+    const site = this;
+    return q.when()
+        .then(function(){
+            return site.siteDescription;
+        })
+        .then(function(siteDescription){
+            const knownPages = new Set(siteDescription.pages.concat(siteDescription.articles, siteDescription.footer));
+            for(let page of newSiteDescription.pages.concat(newSiteDescription.articles, newSiteDescription.footer)){
+                if(!knownPages.has(page)){
+                    return q.reject('UNKNOWN_PAGE');
+                }
+            }
+        })
+        .then(function(){
+            return site.saveSiteDescription({
+                pages: newSiteDescription.pages,
+                articles: newSiteDescription.articles,
+                footer: newSiteDescription.footer,
+            });
         });
 };
 

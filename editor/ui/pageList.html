@@ -6,10 +6,16 @@
     </span>
     <div class="pull-right">
       <div class="btn-group">
-        <button class="btn btn-xs btn-default" ng-click="editPage({pageIndex: $index, page: page})" title="Seite bearbeiten..." ng-disabled="disabled">
+        <button type="button" class="btn btn-xs btn-default" ng-disabled="disabled || $index === 0" ng-click="movePageUpwards($index)" title="Seite nach oben schieben">
+          <span class="glyphicon glyphicon-arrow-up"></span>
+        </button>
+        <button type="button" class="btn btn-xs btn-default" ng-disabled="disabled || $index >= pages.length - 1" ng-click="movePageDownwards($index)" title="Seite nach unten schieben">
+          <span class="glyphicon glyphicon-arrow-down"></span>
+        </button>
+        <button type="button" class="btn btn-xs btn-default" ng-click="editPage({pageIndex: $index, page: page})" title="Seite bearbeiten..." ng-disabled="disabled">
           <span class="glyphicon glyphicon-pencil"></span>
         </button>
-        <button class="btn btn-xs btn-danger" ng-click="removePage({pageIndex: $index, page: page})" title="Seite löschen" ng-disabled="disabled">
+        <button type="button" class="btn btn-xs btn-danger" ng-click="removePage({pageIndex: $index, page: page})" title="Seite löschen" ng-disabled="disabled">
           <span class="glyphicon glyphicon-remove"></span>
         </button>
       </div>

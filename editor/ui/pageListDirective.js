@@ -2,6 +2,7 @@ app.directive('pageList', function(){
     return {
         restrict: 'E',
         templateUrl: 'pageList.html',
+        controller: 'PageListController',
         scope: {
             pages: '<',
 
