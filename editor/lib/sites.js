@@ -29,12 +29,14 @@ Site.prototype.saveSiteDescription = function(siteDescription){
     const site = this;
     return q.when()
         .then(function(){
-            const persistedSiteDescription = {};
+            return site.siteDescription;
+        })
+        .then(function(formerSiteDescription){
             for(let property of ['title', 'pages', 'articles', 'footer']){
-                persistedSiteDescription[property] = siteDescription[property];
+                formerSiteDescription[property] = siteDescription[property];
             }
-            persistedSiteDescription.lastModified = '' + new Date();
-            return fs.write(site.sitePath, JSON.stringify(persistedSiteDescription));
+            formerSiteDescription.lastModified = '' + new Date();
+            return fs.write(site.sitePath, JSON.stringify(formerSiteDescription));
         })
         .then(function(){
             site.siteDescription = q.when(siteDescription);
