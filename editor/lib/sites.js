@@ -65,6 +65,7 @@ Site.prototype.getSiteJson = function(){
                 promises.push(site.getPageMetadata(pagePath)
                               .then(function(pageMetadata){
                                   pageJson.title = pageMetadata.title;
+                                  pageJson.firstPublished = pageMetadata.firstPublished || null;
                               }));
                 return pageJson;
             }
@@ -100,7 +101,7 @@ Site.prototype.getPage = function(pagePath){
         })
         .then(function(pageDescription){
             const pageJson = {};
-            for(let key of ['title', 'content']){
+            for(let key of ['title', 'content', 'firstPublished']){
                 pageJson[key] = pageDescription[key];
             }
             return pageJson;
@@ -119,6 +120,7 @@ Site.prototype.getPageMetadata = function(pagePath){
           .then(function(pageDescription){
               return {
                   title: pageDescription.title,
+                  firstPublished: pageDescription.firstPublished,
               };
           });
     site.pageMetadataCache.set(pagePath, promise);
@@ -153,24 +155,34 @@ const PAGE_DESCRIPTION_DEFAULT_PROPERTIES = {
     content: [],
 };
 
-Site.prototype.savePageDescription = function(pagePath, pageDescription){
+Site.prototype.savePageDescription = function(pagePath, pageDescription, _formerPageDescription_){
     const site = this;
     return q.when()
         .then(function(){
-            return site.getPageFullPath(pagePath);
+            return q.all([
+                site.getPageFullPath(pagePath),
+                _formerPageDescription_ ? q.when(_formerPageDescription_) : site.getPage(pagePath),
+            ]);
         })
-        .then(function(pageFullPath){
+        .then(function(args){
+            const [pageFullPath, formerPageDescription] = args;
+            for(let key in pageDescription){
+                if(!pageDescription.hasOwnProperty(key)){
+                    continue;
+                }
+                formerPageDescription[key] = pageDescription[key];
+            }
             for(let key in PAGE_DESCRIPTION_DEFAULT_PROPERTIES){
                 if(!PAGE_DESCRIPTION_DEFAULT_PROPERTIES.hasOwnProperty(key)){
                     continue;
                 }
-                if(pageDescription.hasOwnProperty(key)){
+                if(formerPageDescription.hasOwnProperty(key)){
                     continue
                 }
-                pageDescription[key] = PAGE_DESCRIPTION_DEFAULT_PROPERTIES[key];
+                fomerPageDescription[key] = PAGE_DESCRIPTION_DEFAULT_PROPERTIES[key];
             }
-            pageDescription.lastModified = '' + new Date();
-            return fs.write(pageFullPath, JSON.stringify(pageDescription));
+            fomerPageDescription.lastModified = '' + new Date();
+            return fs.write(pageFullPath, JSON.stringify(formerPageDescription));
         });
 };
 
@@ -218,7 +230,7 @@ Site.prototype.addPage = function(pageCategory, pageDescription){
             pagePath = _pagePath_;
             return q.all([
                 site.addPagePathToSite(pageCategory, pagePath),
-                site.savePageDescription(pagePath, pageDescription),
+                site.savePageDescription(pagePath, pageDescription, {}),
             ]);
         })
         .then(function(){

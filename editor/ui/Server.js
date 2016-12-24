@@ -28,7 +28,13 @@ app.factory('Server', function($timeout, $http, $q, $state){
         })
             .catch(handleServerErrors)
             .then(function(response){
-                return response.data;
+                const siteDescription = response.data;
+                for(let page of siteDescription.pages.concat(siteDescription.articles, siteDescription.footer)){
+                    if(page.firstPublished){
+                        page.firstPublished = new Date(page.firstPublished);
+                    }
+                }
+                return siteDescription;
             });
     }
 

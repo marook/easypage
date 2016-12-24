@@ -1,6 +1,9 @@
 <ul class="list-group">
   <li ng-repeat="page in pages" class="list-group-item">
     {{page.title}}
+    <span ng-if="showFirstPublished && page.firstPublished" class="epe-first-published">
+      ({{page.firstPublished | date:'medium'}})
+    </span>
     <div class="pull-right">
       <div class="btn-group">
         <button class="btn btn-xs btn-default" ng-click="editPage({pageIndex: $index, page: page})" title="Seite bearbeiten..." ng-disabled="disabled">

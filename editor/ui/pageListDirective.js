@@ -32,6 +32,8 @@ app.directive('pageList', function(){
             removePage: '&',
 
             disabled: '<',
+
+            showFirstPublished: '<',
         },
     };
 });
