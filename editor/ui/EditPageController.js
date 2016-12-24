@@ -71,6 +71,9 @@ app.controller('EditPageController', function($scope, $q, $state, $stateParams, 
 
     function prepareContentSegmentForScope(contentSegment){
         switch(contentSegment.type){
+        case 'list':
+            contentSegment.lines = contentSegment.lines || [];
+            break;
         case 'image':
             contentSegment.imageUploader = buildImageUploader(contentSegment);
             break;

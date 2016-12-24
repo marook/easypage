@@ -42,11 +42,11 @@
         </div>
         <div class="form-group">
           <label>Elemente der Aufzählung</label>
-          <div ng-repeat="line in contentItem.lines">
+          <div ng-repeat="line in contentItem.lines track by $index">
             <div class="row">
               <div class="col-md-11">
                 <div class="form-group">
-                  <input type="text" ng-model="line" ng-disabled="pageSaving" class="form-control"/>
+                  <input type="text" ng-model="contentItem.lines[$index]" ng-disabled="pageSaving" class="form-control"/>
                 </div>
               </div>
               <div class="col-md-1">
