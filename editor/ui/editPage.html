@@ -19,6 +19,35 @@
     </div>
     <div ng-switch="contentItem.type">
       <div ng-switch-default></div>
+      <div ng-switch-when="articles-archive">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Maximale Anzahl Artikel</label>
+              <input type="number" ng-model="contentItem.maxArticles" class="form-control"/>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Sortierung</label>
+              <select class="form-control" ng-model="contentItem.sortOrder" ng-options="so.id as so.title for so in articlesArchiveSortOrders"></select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <div>
+                <label>Gruppieren nach...</label>
+              </div>
+              <div>
+                <label>
+                  <input type="checkbox" ng-model="contentItem.groupByFirstPublishYear" />
+                  Jahr Erstveröffentlichung
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div ng-switch-when="headline">
         <div class="form-group">
           <input class="form-control" ng-model="contentItem.text" ng-disabled="pageSaving"/>

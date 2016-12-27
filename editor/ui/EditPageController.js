@@ -23,6 +23,16 @@ app.controller('EditPageController', function($scope, $q, $state, $stateParams, 
                 title: 'Punkt',
             },
         ];
+        $scope.articlesArchiveSortOrders = [
+            {
+                id: undefined,
+                title: '<keine>',
+            },
+            {
+                id: 'firstPublishedDesc',
+                title: 'Erstveröffentlichung (neuste zuerst)',
+            },
+        ];
 
         $scope.moveContentSegmentUpwards = moveContentSegmentUpwards;
         $scope.moveContentSegmentDownwards = moveContentSegmentDownwards;

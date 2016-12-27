@@ -282,14 +282,89 @@ Renderer.prototype._renderPageContentSegmentArticlesArchive = function _renderPa
             return q.all(articleDefinitions.map(ad => renderer._getPageDirectoryName(ad, false)));
         })
         .then(function(articleDirectoryNames){
-            let htmlFragments = [
-                '<ul class="ep-article-archive">',
-            ];
-            htmlFragments = htmlFragments.concat(articleDefinitions.map((ad, i) => `<li><a class="ep-article-archive-link" href="/${articleDirectoryNames[i]}">${ad.title}</a></li>`));
-            htmlFragments.push('</ul>');
-            return htmlFragments.join('');
+            const articlesArchiveTreeRootNodes = buildArticlesArchiveTree(content, articleDefinitions, articleDirectoryNames);
+            return '<div class="ep-article-archive">' + renderArticlesArchiveTreeNodes(articlesArchiveTreeRootNodes) + '</div>';
         });
 };
+
+function buildArticlesArchiveTree(content, articleDefinitions, articleDirectoryNames){
+    const articles = articleDefinitions.map((ad, i) => ({
+        definition: ad,
+        directoryName: articleDirectoryNames[i],
+    }));
+    if(ARTICLES_COMPARATORS.hasOwnProperty(content.sortOrder)){
+        articles.sort(ARTICLES_COMPARATORS[content.sortOrder]);
+    }
+    if(typeof(content.maxArticles) === 'number' && content.maxArticles >= 0 && content.maxArticles < articles.length){
+        articles.splice(content.maxArticles, articles.length - content.maxArticles);
+    }
+    if(content.groupByFirstPublishYear){
+        const years = [];
+        let currentYear = null;
+        for(let article of articles){
+            const articleFirstPublished = article.definition.firstPublished;
+            const articleYear = articleFirstPublished ? new Date(articleFirstPublished).getFullYear() : null;
+            if(currentYear === null || currentYear.year !== articleYear){
+                currentYear = {
+                    layer: 'first-published-year',
+                    year: articleYear,
+                    title: `${articleYear}`,
+                    children: [],
+                };
+                years.push(currentYear);
+            }
+            currentYear.children.push(buildNodeFromArticle(article));
+        }
+        return years;
+    } else {
+        return articles.map(buildNodeFromArticle);
+    }
+}
+
+function buildNodeFromArticle(article){
+    return {
+        layer: 'article',
+        title: article.definition.title,
+        href: `/${article.directoryName}`,
+    };
+}
+
+const ARTICLES_COMPARATORS = {
+    firstPublishedDesc: function(left, right){
+        const fpl = left.definition.firstPublished;
+        const fpr = right.definition.firstPublished;
+        return (fpl < fpr) ? 1 : ((fpr < fpl) ? -1 : 0);
+    },
+};
+
+function renderArticlesArchiveTreeNodes(nodes){
+    let htmlFragments = [
+        '<ul>',
+    ];
+    htmlFragments = htmlFragments.concat(nodes.map(function(node){
+        if(node.hasOwnProperty('children')){
+            // element
+            htmlFragments.push('<li class="epe-articles-archive-element ');
+            htmlFragments.push(node.layer);
+            htmlFragments.push('"><div class="epe-articles-archive-element-title">');
+            htmlFragments.push(escapeHtml(node.title));
+            htmlFragments.push('</div>');
+            htmlFragments.push(renderArticlesArchiveTreeNodes(node.children));
+            htmlFragments.push('</li>');
+        } else {
+            // leaf
+            htmlFragments.push('<li class="epe-articles-archive-leaf');
+            htmlFragments.push(node.layer);
+            htmlFragments.push('"><a href="');
+            htmlFragments.push(node.href);
+            htmlFragments.push('">');
+            htmlFragments.push(escapeHtml(node.title));
+            htmlFragments.push('</a></li>');
+        }
+    }));
+    htmlFragments.push('</ul>');
+    return htmlFragments.join('');
+}
 
 Renderer.prototype._renderPageContentSegmentHeadline = function _renderPageContentSegmentHeadline(outputDirPath, pageDefinition, content){
     return `<h1 class="ep-headline">${escapeHtml(content.text)}</h1>`;
