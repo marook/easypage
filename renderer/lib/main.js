@@ -57,6 +57,11 @@ Renderer.prototype._getPageDefinition = function _getPageDefinition(pageDefiniti
               if(!pageDefinition.basePath){
                   pageDefinition.basePath = path.dirname(fullPageDefinitionPath);
               }
+              for(let dateKey of ['lastModified', 'firstPublished']){
+                  if(pageDefinition.hasOwnProperty(dateKey)){
+                      pageDefinition[dateKey] = new Date(pageDefinition[dateKey]);
+                  }
+              }
               return pageDefinition;
           });
     this._pageDefinitions.set(pageDefinitionPath, pageLoadPromise);
@@ -303,7 +308,7 @@ function buildArticlesArchiveTree(content, articleDefinitions, articleDirectoryN
         let currentYear = null;
         for(let article of articles){
             const articleFirstPublished = article.definition.firstPublished;
-            const articleYear = articleFirstPublished ? new Date(articleFirstPublished).getFullYear() : null;
+            const articleYear = articleFirstPublished ? articleFirstPublished.getFullYear() : null;
             if(currentYear === null || currentYear.year !== articleYear){
                 currentYear = {
                     layer: 'first-published-year',
