@@ -1,4 +1,4 @@
-app.factory('ErrorHandler', function($log, $q, uibModal){
+app.factory('ErrorHandler', function($log, $q, $uibModal){
     function handleError(error){
         return $q.when()
             .then(function(){
