@@ -15,6 +15,7 @@ Site.prototype.loadSiteDescription = function(){
     const site = this;
     return q.when()
         .then(function(){
+            site.pageMetadataCache.clear();
             return fs.read(site.sitePath);
         })
         .then(function(siteDescriptionBuffer){
@@ -346,11 +347,18 @@ Site.prototype.getPreviewImagePath = function(imageFileName){
 
 Site.prototype.publish = function(){
     const site = this;
+    const publishDate = new Date();
+    let siteDescription;
     return q.when()
         .then(function(){
             return site.siteDescription;
         })
-        .then(function(siteDescription){
+        .then(function(_siteDescription_){
+            siteDescription = _siteDescription_;
+            return q.all(siteDescription.pages.concat(siteDescription.articles, siteDescription.footer).map(pagePath => site.setPagePublishDate(pagePath, publishDate)));
+        })
+        .then(function(){
+            site.siteDescription = site.loadSiteDescription();
             return child_process.exec(siteDescription.publish, {
                 cwd: siteDescription.basePath,
             });
@@ -358,6 +366,20 @@ Site.prototype.publish = function(){
         .then(function(stdout){
             // we don't want to pass stdout to the caller
             return undefined;
+        });
+};
+
+Site.prototype.setPagePublishDate = function(pagePath, publishDate){
+    const site = this;
+    return q.when()
+        .then(function(){
+            return site.loadPageDescription(pagePath);
+        })
+        .then(function(pageDescription){
+            if(!pageDescription.firstPublished){
+                pageDescription.firstPublished = publishDate;
+                return site.savePageDescription(pagePath, pageDescription, pageDescription);
+            }
         });
 };
 

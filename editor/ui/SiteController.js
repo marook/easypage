@@ -24,6 +24,9 @@ app.controller('SiteController', function($scope, $uibModal, $state, $q, Server,
             .then(function(){
                 return Server.publishSite();
             })
+            .then(function(){
+                return fetchSite();
+            })
             .catch(ErrorHandler.handleError)
             .finally(function(){
                 $scope.publishingSite = false;
