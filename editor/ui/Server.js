@@ -3,7 +3,7 @@ app.factory('Server', function($timeout, $http, $q, $state){
     function login(username, password){
         return $http({
             method: 'POST',
-            url: '/api/login',
+            url: 'api/login',
             data: {
                 username,
                 password,
@@ -24,7 +24,7 @@ app.factory('Server', function($timeout, $http, $q, $state){
     function getSite(){
         return $http({
             method: 'GET',
-            url: '/api/site'
+            url: 'api/site'
         })
             .catch(handleServerErrors)
             .then(function(response){
@@ -41,7 +41,7 @@ app.factory('Server', function($timeout, $http, $q, $state){
     function updateSite(siteDescription){
         return $http({
             method: 'PUT',
-            url: '/api/site',
+            url: 'api/site',
             data: siteDescription,
         })
             .catch(handleServerErrors)
@@ -59,7 +59,7 @@ app.factory('Server', function($timeout, $http, $q, $state){
     function getPage(pageId){
         return $http({
             method: 'GET',
-            url: `/api/page/${pageId}`,
+            url: `api/page/${pageId}`,
         })
             .catch(handleServerErrors)
             .then(function(response){
@@ -82,7 +82,7 @@ app.factory('Server', function($timeout, $http, $q, $state){
     function addPageToSite(pageCategory, pageTitle){
         return $http({
             method: 'POST',
-            url: `/api/site/${pageCategory}`,
+            url: `api/site/${pageCategory}`,
             data: {
                 title: pageTitle,
             },
@@ -96,7 +96,7 @@ app.factory('Server', function($timeout, $http, $q, $state){
     function updatePage(pageId, page){
         return $http({
             method: 'PUT',
-            url: `/api/page/${pageId}`,
+            url: `api/page/${pageId}`,
             data: page,
         })
             .catch(handleServerErrors)
@@ -108,7 +108,7 @@ app.factory('Server', function($timeout, $http, $q, $state){
     function removePage(pageId){
         return $http({
             method: 'DELETE',
-            url: `/api/page/${pageId}`,
+            url: `api/page/${pageId}`,
         })
             .catch(handleServerErrors)
             .then(function(response){
