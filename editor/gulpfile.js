@@ -1,4 +1,5 @@
 const concat = require('gulp-concat');
+const replace = require('gulp-replace');
 const gulp = require('gulp');
 
 gulp.task('default', ['build']);
@@ -16,6 +17,7 @@ gulp.task('css-to-www', function(){
         'ui/**/*.css',
     ])
         .pipe(concat('style.css'))
+        .pipe(replace('../fonts/', 'fonts/')) // fixes bootstrap font paths
         .pipe(gulp.dest('www'));
 });
 
