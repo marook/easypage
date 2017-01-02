@@ -51,9 +51,14 @@ app.factory('Server', function($timeout, $http, $q, $state){
     }
 
     function publishSite(){
-        // TODO implement me
-        return $timeout(function(){
-        }, 700);
+        return $http({
+            method: 'POST',
+            url: 'api/site/publish',
+        })
+            .catch(handleServerErrors)
+                .then(function(response){
+                    return response.data;
+                });
     }
 
     function getPage(pageId){

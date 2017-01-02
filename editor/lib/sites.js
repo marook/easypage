@@ -1,3 +1,4 @@
+const child_process = require('./child_process_q');
 const fs = require('q-io/fs');
 const images = require('./images');
 const path = require('path');
@@ -340,6 +341,23 @@ Site.prototype.getPreviewImagePath = function(imageFileName){
         })
         .then(function(){
             return path.resolve(previewImagePath);
+        });
+};
+
+Site.prototype.publish = function(){
+    const site = this;
+    return q.when()
+        .then(function(){
+            return site.siteDescription;
+        })
+        .then(function(siteDescription){
+            return child_process.exec(siteDescription.publish, {
+                cwd: siteDescription.basePath,
+            });
+        })
+        .then(function(stdout){
+            // we don't want to pass stdout to the caller
+            return undefined;
         });
 };
 

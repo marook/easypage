@@ -54,6 +54,7 @@ function main(){
             const handlers = [
                 ['get', '/site', handleGetSite],
                 ['put', '/site', handlePutSite],
+                ['post', '/site/publish', handlePublishSite],
                 ['get', '/page/:pageId', handleGetPage],
                 ['put', '/page/:pageId', handlePutPage],
                 ['delete', '/page/:pageId', handleDeletePage],
@@ -132,6 +133,10 @@ function handleGetSite(req, res){
 
 function handlePutSite(req, res){
     return site.updateSite(req.body);
+}
+
+function handlePublishSite(req, res){
+    return site.publish();
 }
 
 function handleGetPage(req, res){

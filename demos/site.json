@@ -3,6 +3,7 @@
     "stylesheets": [
         "/demo.css"
     ],
+    "publish": "./node_modules/.bin/gulp",
     "pages": [
         "home.json",
         "someOtherPage.json",
