@@ -204,7 +204,7 @@ Renderer.prototype.renderPageHead = function renderPageHead(outputDirPath, pageD
         })
         .then(function(siteDefinition){
             let htmlArtifacts = [
-                `<head><meta charset="UTF-8"/><title>${pageDefinition.title} - ${siteDefinition.title}</title>`,
+                `<head><meta charset="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>${pageDefinition.title} - ${siteDefinition.title}</title>`,
             ];
             if(siteDefinition.stylesheets){
                 htmlArtifacts = htmlArtifacts.concat(siteDefinition.stylesheets.map(s => `<link rel="stylesheet" type="text/css" href="${s}"/>`));
