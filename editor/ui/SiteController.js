@@ -24,7 +24,6 @@ app.controller('SiteController', function($scope, $uibModal, $state, $q, Server,
             .then(function(){
                 return Server.publishSite();
             })
-        // TODO show success message
             .catch(ErrorHandler.handleError)
             .finally(function(){
                 $scope.publishingSite = false;

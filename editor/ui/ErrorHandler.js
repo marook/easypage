@@ -1,7 +1,13 @@
-app.factory('ErrorHandler', function($log){
+app.factory('ErrorHandler', function($log, $q, uibModal){
     function handleError(error){
-        $log.error(error);
-        showErrorModal(error);
+        return $q.when()
+            .then(function(){
+                $log.error(error);
+                showErrorModal(error);
+            })
+            .then(function(){
+                return $q.reject(error);
+            });
     }
 
     function showErrorModal(error){
