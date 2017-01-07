@@ -391,7 +391,7 @@ Renderer.prototype._renderPageContentSegmentList = function _renderPageContentSe
     let htmlArtifacts = [
         `<ul class="ep-list ep-list-style-${content.style || 'none'}">`,
     ];
-    htmlArtifacts = htmlArtifacts.concat(content.lines.map(line => `<li>${escapeHtml(line)}</li>`));
+    htmlArtifacts = htmlArtifacts.concat(content.lines.map(line => `<li>${eMailAddressMarkupToAnchors(escapeHtml(line))}</li>`));
     htmlArtifacts.push('</ul>');
     return htmlArtifacts.join('');
 };
@@ -402,8 +402,13 @@ Renderer.prototype._renderPageContentSegmentParagraph = function _renderPageCont
           .split('\n')
           .map(l => escapeHtml(l.trim()))
           .join('<br/>');
-    return `<p class="ep-paragraph">${lines}</p>`;
+    return `<p class="ep-paragraph">${eMailAddressMarkupToAnchors(lines)}</p>`;
 };
+
+function eMailAddressMarkupToAnchors(text){
+    return text
+        .replace(/\[\[([^@]+@[^\]]+)\]\]/, (match, eMailAddress) => `<a href="mailto:${escapeHtml(eMailAddress)}">${escapeHtml(eMailAddress)}</a>`);
+}
 
 Renderer.prototype.renderFooter = function renderFooter(outputDirPath, pageDefinition){
     const renderer = this;
