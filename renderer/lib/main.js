@@ -406,8 +406,21 @@ Renderer.prototype._renderPageContentSegmentParagraph = function _renderPageCont
 };
 
 function eMailAddressMarkupToAnchors(text){
+    const MAIL_PATTERN = /^[^@]+@[^@]+$/;
+    const LINK_PATTERN = /^(?:([^|]*)\|)?((?:http|https):\/\/.*)$/;
     return text
-        .replace(/\[\[([^@]+@[^\]]+)\]\]/, (match, eMailAddress) => `<a href="mailto:${escapeHtml(eMailAddress)}">${escapeHtml(eMailAddress)}</a>`);
+        .replace(/\[\[([^\]]+)\]\]/, function(match, linkMarkup){
+            linkMarkup = linkMarkup.trim();
+            const linkMatch = linkMarkup.match(LINK_PATTERN);
+            if(linkMatch){
+                return `<a href="${escapeHtml(linkMatch[2])}">${escapeHtml(linkMatch[1])}</a>`;
+            }
+            const mailMatch = linkMarkup.match(MAIL_PATTERN);
+            if(mailMatch){
+                return `<a href="mailto:${escapeHtml(linkMarkup)}">${escapeHtml(linkMarkup)}</a>`;
+            }
+            return escapeHtml(linkMarkup);
+        });
 }
 
 Renderer.prototype.renderFooter = function renderFooter(outputDirPath, pageDefinition){

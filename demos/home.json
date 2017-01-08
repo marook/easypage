@@ -15,6 +15,10 @@
             "title": "You see some grass."
         },
         {
+            "type": "paragraph",
+            "text": "Link to [[easypage code|https://github.com/marook/easypage]]."
+        },
+        {
             "type": "image",
             "src": "tree.jpg",
             "title": "You see a tree."
