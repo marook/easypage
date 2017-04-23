@@ -92,7 +92,7 @@ app.controller('EditPageController', function($scope, $q, $state, $stateParams, 
 
     function buildImageUploader(contentSegment){
         const uploader = new FileUploader({
-            url: '/api/images',
+            url: 'api/images',
         });
         uploader.autoUpload = true;
         uploader.onCompleteItem = function(fileItem, response, status, headers){
