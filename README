@@ -1,10 +1,32 @@
 easypage - simple website toolkit
 
+1) Introduction
+2) Running the demo site
+
+
+------------------------------------------------------------------------
+Introduction
+
 The project contains the following artifacts:
 - editor: A server application for editing easypage sites via a
   webbrowser.
 - renderer: Renders an easypage site into a static HTML site.
 - demos: A demo easypage site.
 
-For more detais about an artifact see the README within the artifact
+For more details about an artifact see the README within the artifact
 directory.
+
+
+------------------------------------------------------------------------
+Running the demo site
+
+$ ( cd editor && npm install )
+$ node editor --port 9002 --site demos/site.json --users demos/users.json
+
+then in another terminal
+
+$ cd editor
+$ gulp build connect
+
+Point your browser to http://localhost:9001 and login with user demo and
+password demo.

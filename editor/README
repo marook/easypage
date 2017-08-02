@@ -1,25 +1,13 @@
 easypage-editor
 
 1) Starting the Server
-2) Development
-3) Generating User Credentials
+2) Generating User Credentials
 
 
 ------------------------------------------------------------------------
 Starting the Server
 
 $ node . --port 1234 --site path/to/site.json --users path/to/users.json
-
-
-------------------------------------------------------------------------
-Development
-
-You have to start the node server and gulp server in parallel.
-$ node . --port 9002 --site ../demos/site.json --users ../demos/user.json
-$ gulp build connect
-
-Launch a webserver on http://localhost:9001 and login with user demo and
-password demo.
 
 
 ------------------------------------------------------------------------
