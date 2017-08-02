@@ -87,6 +87,10 @@ function main(){
             app.get('/image/:imageFileName/preview', handleImagePreview);
             app.listen(argv.port || 8080);
             console.log('Server is ready');
+        })
+        .catch(function(e){
+            console.log('Fatal error: ', e);
+            process.exitCode = 1;
         });
 }
 
