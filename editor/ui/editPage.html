@@ -17,6 +17,12 @@
         {{CONTENT_SEGMENT_TYPE_TITLES.get(contentItem.type)}}
       </span>
     </div>
+    <div ng-if="contentItem.error" class="alert alert-danger error" role="alert">
+        <div>
+            {{contentItem.error.message}}
+        </div>
+        <pre ng-if="contentItem.error.details" class="error-details">{{contentItem.error.details}}</pre>
+    </div>
     <div ng-switch="contentItem.type">
       <div ng-switch-default></div>
       <div ng-switch-when="articles-archive">
@@ -52,6 +58,21 @@
         <div class="form-group">
           <input class="form-control" ng-model="contentItem.text" ng-disabled="pageSaving"/>
         </div>
+      </div>
+      <div ng-switch-when="file">
+          <div class="form-group">
+              <input
+                  class="form-control"
+                  ng-model="contentItem.label"
+                  ng-disabled="pageSaving"
+                  placeholder="Bezeichnung"/>
+          </div>
+          <div>
+              <input type="file" nv-file-select uploader="contentItem.fileUploader"/>
+          </div>
+          <div ng-show="contentItem.fileUploader.isUploading">
+              <div class="progress-bar" role="progressbar" aria-valuenow="{{contentItem.fileUploader.progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{contentItem.fileUploader.progress}}%"></div>
+          </div>
       </div>
       <div ng-switch-when="image">
         <div>

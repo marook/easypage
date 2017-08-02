@@ -81,22 +81,36 @@ app.controller('EditPageController', function($scope, $q, $state, $stateParams, 
 
     function prepareContentSegmentForScope(contentSegment){
         switch(contentSegment.type){
-        case 'list':
-            contentSegment.lines = contentSegment.lines || [];
-            break;
-        case 'image':
-            contentSegment.imageUploader = buildImageUploader(contentSegment);
-            break;
+            case 'file':
+                contentSegment.label = '';
+                contentSegment.fileUploader = buildFileUploader(contentSegment, '/api/downloads');
+                break;
+            case 'list':
+                contentSegment.lines = contentSegment.lines || [];
+                break;
+            case 'image':
+                contentSegment.imageUploader = buildFileUploader(contentSegment, '/api/images');
+                break;
         }
     }
 
-    function buildImageUploader(contentSegment){
+    function buildFileUploader(contentSegment, url){
         const uploader = new FileUploader({
-            url: '/api/images',
+            url,
         });
         uploader.autoUpload = true;
+        uploader.onBeforeUploadItem = function(){
+            contentSegment.error = null;
+        };
         uploader.onCompleteItem = function(fileItem, response, status, headers){
-            contentSegment.src = response;
+            if(status === 200){
+                contentSegment.src = response;
+            } else {
+                contentSegment.error = {
+                    message: 'Fehler beim Hochladen',
+                    details: response,
+                };
+            }
         };
         return uploader;
     }
