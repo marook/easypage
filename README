@@ -1,1 +1,10 @@
 easypage - simple website toolkit
+
+The project contains the following artifacts:
+- editor: A server application for editing easypage sites via a
+  webbrowser.
+- renderer: Renders an easypage site into a static HTML site.
+- demos: A demo easypage site.
+
+For more detais about an artifact see the README within the artifact
+directory.
