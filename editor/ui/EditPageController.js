@@ -83,13 +83,13 @@ app.controller('EditPageController', function($scope, $q, $state, $stateParams, 
         switch(contentSegment.type){
             case 'file':
                 contentSegment.label = '';
-                contentSegment.fileUploader = buildFileUploader(contentSegment, '/api/downloads');
+                contentSegment.fileUploader = buildFileUploader(contentSegment, 'api/downloads');
                 break;
             case 'list':
                 contentSegment.lines = contentSegment.lines || [];
                 break;
             case 'image':
-                contentSegment.imageUploader = buildFileUploader(contentSegment, '/api/images');
+                contentSegment.imageUploader = buildFileUploader(contentSegment, 'api/images');
                 break;
         }
     }
