@@ -20,6 +20,7 @@ directory.
 ------------------------------------------------------------------------
 Running the demo site
 
+$ ( cd demos && npm install )
 $ ( cd editor && npm install )
 $ node editor --port 9002 --site demos/site.json --users demos/users.json
 
