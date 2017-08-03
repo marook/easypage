@@ -30,4 +30,11 @@ $ cd editor
 $ gulp build connect
 
 Point your browser to http://localhost:9001 and login with user demo and
-password demo.
+password demo to edit the site.
+
+To view the site open anther terminal and run
+
+$ cd demos
+$ gulp connect
+
+Go to http://localhost:9003 to view the site.

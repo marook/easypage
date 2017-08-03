@@ -10,7 +10,7 @@ gulp.task('build', ['render-site', 'render-css']);
 
 gulp.task('connect', function(){
     connect.server({
-        port: 9001,
+        port: 9003,
         root: 'www',
     });
 });
