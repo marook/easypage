@@ -20,9 +20,7 @@ Site.prototype.loadSiteDescription = function(){
         })
         .then(function(siteDescriptionBuffer){
             const siteDescription = JSON.parse(siteDescriptionBuffer);
-            if(!siteDescription.hasOwnProperty('basePath')){
-                siteDescription.basePath = path.dirname(site.sitePath);
-            }
+            siteDescription.$basePath = path.dirname(site.sitePath);
             return siteDescription;
         });
 };
@@ -175,9 +173,7 @@ Site.prototype.loadPageDescription = function(pagePath){
         })
         .then(function(pageDescriptionBuffer){
             const pageDescription = JSON.parse(pageDescriptionBuffer);
-            if(!pageDescription.hasOwnProperty('basePath')){
-                pageDescription.basePath = path.dirname(pageFullPath);
-            }
+            pageDescription.$basePath = path.dirname(pageFullPath);
             return pageDescription;
         });
 }
@@ -214,7 +210,13 @@ Site.prototype.savePageDescription = function(pagePath, pageDescription, _former
                 formerPageDescription[key] = PAGE_DESCRIPTION_DEFAULT_PROPERTIES[key];
             }
             formerPageDescription.lastModified = '' + new Date();
-            return fs.write(pageFullPath, JSON.stringify(formerPageDescription));
+            const persistedPageDescription = Object.assign({}, formerPageDescription);
+            for(let key of Object.keys(persistedPageDescription)){
+                if(key.lastIndexOf('$', 0) === 0){
+                    delete persistedPageDescription[key];
+                }
+            }
+            return fs.write(pageFullPath, JSON.stringify(persistedPageDescription));
         });
 };
 
@@ -318,7 +320,7 @@ Site.prototype.getPageFullPath = function(pagePath){
             return site.siteDescription;
         })
         .then(function(siteDescription){
-            return path.join(siteDescription.basePath, pagePath);
+            return path.join(siteDescription.$basePath, pagePath);
         });
 };
 
@@ -331,12 +333,12 @@ Site.prototype.getPreviewImagePath = function(imageFileName){
         })
         .then(function(_siteDescription_){
             siteDescription = _siteDescription_;
-            previewImagePath = path.join(siteDescription.basePath, `${imageFileName}-preview`);
+            previewImagePath = path.join(siteDescription.$basePath, `${imageFileName}-preview`);
             return fs.exists(previewImagePath);
         })
         .then(function(previewImageExists){
             if(!previewImageExists){
-                const inputImagePath = path.join(siteDescription.basePath, imageFileName);
+                const inputImagePath = path.join(siteDescription.$basePath, imageFileName);
                 return images.resizeImage(previewImagePath, inputImagePath, 400, 300);
             }
         })
@@ -360,7 +362,7 @@ Site.prototype.publish = function(){
         .then(function(){
             site.siteDescription = site.loadSiteDescription();
             return child_process.exec(siteDescription.publish, {
-                cwd: siteDescription.basePath,
+                cwd: siteDescription.$basePath,
             });
         })
         .then(function(stdout){

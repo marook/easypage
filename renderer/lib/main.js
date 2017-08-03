@@ -31,9 +31,7 @@ Renderer.prototype._getSiteDefinition = function _getSiteDefinition(siteDefiniti
         })
         .then(function(siteDefinitionTxt){
             const siteDefinition = JSON.parse(siteDefinitionTxt);
-            if(!siteDefinition.basePath){
-                siteDefinition.basePath = path.dirname(siteDefinitionPath);
-            }
+            siteDefinition.$basePath = path.dirname(siteDefinitionPath);
             return siteDefinition;
         });
 };
@@ -50,13 +48,11 @@ Renderer.prototype._getPageDefinition = function _getPageDefinition(pageDefiniti
           })
           .then(function(_siteDefinition_){
               siteDefinition = _siteDefinition_;
-              fullPageDefinitionPath = path.join(siteDefinition.basePath, pageDefinitionPath);
+              fullPageDefinitionPath = path.join(siteDefinition.$basePath, pageDefinitionPath);
               return loadDefinition(fullPageDefinitionPath);
           })
           .then(function(pageDefinition){
-              if(!pageDefinition.basePath){
-                  pageDefinition.basePath = path.dirname(fullPageDefinitionPath);
-              }
+              pageDefinition.$basePath = path.dirname(fullPageDefinitionPath);
               for(let dateKey of ['lastModified', 'firstPublished']){
                   if(pageDefinition.hasOwnProperty(dateKey)){
                       pageDefinition[dateKey] = new Date(pageDefinition[dateKey]);
@@ -75,9 +71,7 @@ function loadDefinition(definitionPath){
         })
         .then(function(definitionTxt){
             const definition = JSON.parse(definitionTxt);
-            if(!definition.basePath){
-                definition.basePath = path.dirname(definitionPath);
-            }
+            definition.$basePath = path.dirname(definitionPath);
             return definition;
         });
 }
@@ -380,7 +374,7 @@ Renderer.prototype._renderPageContentSegmentImage = function _renderPageContentS
     return q.when()
         .then(function(){
             renderedImagePath = path.join(outputDirPath, content.src);
-            return images.webifyImage(renderedImagePath, path.join(pageDefinition.basePath, content.src));
+            return images.webifyImage(renderedImagePath, path.join(pageDefinition.$basePath, content.src));
         })
         .then(function(imageResolution){
             return `<div class="ep-image"><img src="${path.basename(renderedImagePath)}"/></div>`;
