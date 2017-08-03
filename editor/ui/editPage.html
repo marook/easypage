@@ -87,7 +87,9 @@
           <img ng-src="api/image/{{contentItem.src}}/preview"/>
         </div>
         <div>
-          <input type="file" nv-file-select uploader="contentItem.imageUploader"/>
+          <label class="btn" ng-class="{'btn-default': contentItem.src, 'btn-primary': !contentItem.src}">
+            Bild auswählen... <input type="file" nv-file-select uploader="contentItem.imageUploader" hidden/>
+          </label>
         </div>
         <div ng-show="contentItem.imageUploader.isUploading">
           <div class="progress-bar" role="progressbar" aria-valuenow="{{contentItem.imageUploader.progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{contentItem.imageUploader.progress}}%"></div>
