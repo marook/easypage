@@ -85,6 +85,7 @@ function main(){
             });
             app.post('/images', fileUpload.single('file'), handleImageUpload);
             app.get('/image/:imageFileName/preview', handleImagePreview);
+            app.post('/downloads', fileUpload.single('file'), handleDownloadUpload);
             app.listen(argv.port || 8080);
             console.log('Server is ready');
         })
@@ -188,6 +189,24 @@ function handleImagePreview(req, res){
         })
         .then(function(previewImagePath){
             res.sendFile(previewImagePath);
+        })
+        .catch(buildErrorHandler(req, res));
+}
+
+function handleDownloadUpload(req, res){
+    q.when()
+        .then(function(){
+            if(!req.user){
+                return q.reject({
+                    httpStatusCode: 401,
+                });
+            }
+        })
+        .then(function(){
+            res.json({
+                fileName: req.file.originalname,
+                resourceName: req.file.filename,
+            });
         })
         .catch(buildErrorHandler(req, res));
 }

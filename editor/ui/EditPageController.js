@@ -81,20 +81,23 @@ app.controller('EditPageController', function($scope, $q, $state, $stateParams, 
 
     function prepareContentSegmentForScope(contentSegment){
         switch(contentSegment.type){
-            case 'file':
-                contentSegment.label = '';
-                contentSegment.fileUploader = buildFileUploader(contentSegment, 'api/downloads');
-                break;
-            case 'list':
-                contentSegment.lines = contentSegment.lines || [];
-                break;
-            case 'image':
-                contentSegment.imageUploader = buildFileUploader(contentSegment, 'api/images');
-                break;
+        case 'file':
+            contentSegment.fileUploader = buildFileUploader(contentSegment, 'api/downloads', function(response){
+                contentSegment.file = response;
+            });
+            break;
+        case 'list':
+            contentSegment.lines = contentSegment.lines || [];
+            break;
+        case 'image':
+            contentSegment.imageUploader = buildFileUploader(contentSegment, 'api/images', function(response){
+                contentSegment.src = response;
+            });
+            break;
         }
     }
 
-    function buildFileUploader(contentSegment, url){
+    function buildFileUploader(contentSegment, url, successHandler){
         const uploader = new FileUploader({
             url,
         });
@@ -104,7 +107,7 @@ app.controller('EditPageController', function($scope, $q, $state, $stateParams, 
         };
         uploader.onCompleteItem = function(fileItem, response, status, headers){
             if(status === 200){
-                contentSegment.src = response;
+                successHandler(response);
             } else {
                 contentSegment.error = {
                     message: 'Fehler beim Hochladen',
@@ -148,6 +151,12 @@ app.controller('EditPageController', function($scope, $q, $state, $stateParams, 
                 switch(cs.type){
                 default:
                     return cs;
+                case 'file':
+                    return {
+                        type: cs.type,
+                        file: cs.file,
+                        label: cs.label,
+                    };
                 case 'image':
                     return {
                         type: cs.type,

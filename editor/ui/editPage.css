@@ -24,3 +24,7 @@
 .error .error-details {
     max-height: 100px;
 }
+
+[hidden] {
+  display: none !important;
+}

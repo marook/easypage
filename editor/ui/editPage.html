@@ -67,8 +67,16 @@
                   ng-disabled="pageSaving"
                   placeholder="Bezeichnung"/>
           </div>
+          <div ng-if="contentItem.file" class="input-group">
+            <span class="input-group-addon">
+              Datei
+            </span>
+            <input type="text" ng-value="contentItem.file.fileName" class="form-control" disabled/>
+          </div>
           <div>
-              <input type="file" nv-file-select uploader="contentItem.fileUploader"/>
+            <label class="btn" ng-class="{'btn-default': contentItem.file, 'btn-primary': !contentItem.file}">
+              Datei auswählen... <input type="file" nv-file-select uploader="contentItem.fileUploader" hidden/>
+            </label>
           </div>
           <div ng-show="contentItem.fileUploader.isUploading">
               <div class="progress-bar" role="progressbar" aria-valuenow="{{contentItem.fileUploader.progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{contentItem.fileUploader.progress}}%"></div>
