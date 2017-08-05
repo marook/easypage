@@ -253,6 +253,8 @@ Renderer.prototype.renderPageContentSegment = function renderPageContentSegment(
                 return q.reject(new Error('ep.unknownContentSegmentType: ' + content.type));
             case 'articles-archive':
                 return renderer._renderPageContentSegmentArticlesArchive(outputDirPath, pageDefinition, content);
+            case 'file':
+                return renderer._renderPageContentSegmentDownload(outputDirPath, pageDefinition, content);
             case 'headline':
                 return renderer._renderPageContentSegmentHeadline(outputDirPath, pageDefinition, content);
             case 'image':
@@ -367,6 +369,36 @@ function renderArticlesArchiveTreeNodes(nodes){
 
 Renderer.prototype._renderPageContentSegmentHeadline = function _renderPageContentSegmentHeadline(outputDirPath, pageDefinition, content){
     return `<h1 class="ep-headline">${escapeHtml(content.text)}</h1>`;
+};
+
+const SHEET_SVG = `<svg version="1.0" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+ <g transform="matrix(1.0124 0 0 1.0124 -.37266 -.37266)" stroke-linecap="round" stroke-linejoin="round">
+  <g transform="matrix(1.0384 0 0 1.0384 -1.1507 -1.1507)" color="#000000" display="block">
+   <path d="m11.75 54.375v-48.75h27.688l8.812 8.813v39.937h-36.5z" fill="none" stroke="#fff" stroke-width="7.1343"/>
+   <path d="m11.75 54.375v-48.75h27.688l8.812 8.813v39.937h-36.5z" fill="#fff" stroke="#000" stroke-width="2.3781"/>
+   <path d="m39.437 14.438v-8.813l8.813 8.813h-8.813z" stroke="#000" stroke-width="2.3781"/>
+  </g>
+  <g fill="none" stroke="#000" stroke-width="2.4693">
+    <path d="m17.21 32.165h25.58"/>
+    <path d="m17.21 37.165h25.58"/>
+    <path d="m17.21 42.165h25.58"/>
+    <path d="m17.21 47.165h25.58"/>
+    <path d="m17.21 27.165h25.58"/>
+    <path d="m17.21 22.165h25.58"/>
+  </g>
+ </g>
+</svg>`.replace(/\n/g, '').replace(/[\s]{2,}/g, ' ');
+
+Renderer.prototype._renderPageContentSegmentDownload = function _renderPageContentSegmentDownload(outputDirPath, pageDefinition, content){
+    return q.when()
+        .then(function(){
+            const inputPath = path.join(pageDefinition.$basePath, content.file.resourceName);
+            const outputPath = path.join(outputDirPath, content.file.resourceName);
+            return fs.copy(inputPath, outputPath);
+        })
+        .then(function(){
+            return `<div class="ep-download"><a href="${escapeHtml(content.file.resourceName)}" download="${escapeHtml(content.file.fileName)}"><div class="ep-download-icon">${SHEET_SVG}</div><div class="ep-download-label">${escapeHtml(content.label || content.file.fileName)}</div></a></div>`;
+        });
 };
 
 Renderer.prototype._renderPageContentSegmentImage = function _renderPageContentSegmentImage(outputDirPath, pageDefinition, content){
