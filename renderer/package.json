@@ -1,6 +1,6 @@
 {
     "name": "easypage-renderer",
-    "version": "0.5.0",
+    "version": "0.6.0",
     "description": "page renderer for easypage format",
     "author": {
         "name": "Markus Peröbner",
