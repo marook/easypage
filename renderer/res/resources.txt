@@ -1,0 +1,7 @@
+resources
+
+This document lists external sources for the files within this
+directory.
+
+sheet.svg
+  https://pixabay.com/de/blatt-dokument-papier-schreiben-1292828/
