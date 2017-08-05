@@ -1,9 +1,1 @@
-{
-    "title": "Article 2",
-    "content": [
-        {
-            "type": "headline",
-            "text": "Article 2"
-        }
-    ]
-}
+{"title":"Article 2","content":[{"type":"headline","text":"Article 2"}],"firstPublished":"2017-08-03T10:16:44.967Z","lastModified":"Thu Aug 03 2017 12:16:44 GMT+0200 (CEST)"}
