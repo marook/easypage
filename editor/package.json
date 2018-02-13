@@ -1,12 +1,12 @@
 {
     "name": "easypage-editor",
-    "version": "0.2.3",
+    "version": "0.3.0",
     "description": "page editor for easypage format",
     "author": {
         "name": "Markus Peröbner",
         "email": "markus.peroebner@gmail.com"
     },
-    "engines":{
+    "engines": {
         "node": ">=4.4.5"
     },
     "main": "lib/main",
