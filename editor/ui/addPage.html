@@ -1,16 +1,37 @@
-<form novalidate ng-submit="createPage()">
+<form novalidate ng-submit="createPage()" name="addPageForm">
   <div class="modal-header">
     <h4>Neue Seite anlegen...</h4>
   </div>
   <div class="modal-body">
-    <div class="form-group">
-      <label>Titel der Seite</label>
-      <input ng-model="pageTitle" type="text" class="form-control" placeholder="Titel der Seite" ng-disabled="creatingPage"/>
+    <div
+        class="form-group"
+        ng-class="{'has-error': addPageForm.pageTitle.$touched && addPageForm.pageTitle.$error.required}">
+      <label
+          class="control-label"
+          for="pageTitle">
+        Titel der Seite
+      </label>
+      <input
+          name="pageTitle"
+          ng-model="pageTitle"
+          type="text"
+          class="form-control"
+          placeholder="Titel der Seite"
+          ng-disabled="creatingPage"
+          required/>
+      <span
+          ng-show="addPageForm.pageTitle.$touched && addPageForm.pageTitle.$error.required"
+          class="text-danger">
+          Der Titel einer Seite kann nicht leer sein.
+      </span>
     </div>
   </div>
   <div class="modal-footer">
     <div class="pull-right">
-      <button type="submit" class="btn btn-primary" ng-disabled="creatingPage">
+      <button
+          type="submit"
+          class="btn btn-primary"
+          ng-disabled="creatingPage || addPageForm.$invalid">
         Anlegen
       </button>
       <button type="button" class="btn btn-default" ng-click="cancel()" ng-disabled="creatingPage">
