@@ -22,12 +22,13 @@ Running the demo site
 
 $ ( cd demos && npm install )
 $ ( cd editor && npm install )
+$ ( cd renderer && npm install )
 $ node editor --port 9002 --site demos/site.json --users demos/users.json
 
 then in another terminal
 
 $ cd editor
-$ gulp build connect
+$ ./node_modules/.bin/gulp build connect
 
 Point your browser to http://localhost:9001 and login with user demo and
 password demo to edit the site.
@@ -35,6 +36,6 @@ password demo to edit the site.
 To view the site open anther terminal and run
 
 $ cd demos
-$ gulp connect
+$ ./node_modules/.bin/gulp connect
 
 Go to http://localhost:9003 to view the site.
