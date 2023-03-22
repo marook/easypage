@@ -2,6 +2,7 @@ easypage - simple website toolkit
 
 1) Introduction
 2) Running the demo site
+3) Adding a user
 
 
 ------------------------------------------------------------------------
@@ -39,3 +40,19 @@ $ cd demos
 $ ./node_modules/.bin/gulp connect
 
 Go to http://localhost:9003 to view the site.
+
+
+------------------------------------------------------------------------
+Adding a user
+
+The editor uses the users.json file passed via command line arguments
+to identify permitted editors.
+
+The users.json file is expected to be an array of users. Each user has
+two fields. "username" which is the login name of the user. "password"
+which contains the sha512 hex digest of the user's password. See the
+file demos/users.json for an example.
+
+Password hashes can be built using the pw-gen.js script:
+
+$ node pw-gen.js
